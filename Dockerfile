@@ -3,22 +3,29 @@
 # Multi-runtime image supporting Node.js 20 & Python 3 Machine Learning Services
 # ==============================================================================
 
-FROM node:20-bullseye-slim
+FROM node:20-bookworm-slim
 
 # Set environment defaults
 ENV NODE_ENV=production \
     PORT=8080 \
     PYTHONUNBUFFERED=1 \
-    DEBIAN_FRONTEND=noninteractive
+    DEBIAN_FRONTEND=noninteractive \
+    VIRTUAL_ENV=/opt/venv
 
-# Install Python 3, pip, and required system build libraries
+# Install Python 3, pip, venv, and curl
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
     python3-pip \
-    python3-dev \
-    build-essential \
+    python3-venv \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Set up dedicated Python Virtual Environment to conform with PEP 668
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Ensure 'python' symlink is available globally
+RUN ln -sf $VIRTUAL_ENV/bin/python3 /usr/local/bin/python || true
 
 # Set application working directory
 WORKDIR /app
@@ -30,17 +37,17 @@ COPY requirements.txt ./
 # Install production Node.js dependencies
 RUN npm ci --omit=dev
 
-# Install Python ML dependencies
-RUN pip3 install --no-cache-dir -r requirements.txt
+# Install Python ML dependencies inside the virtual environment
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application source code
 COPY . .
 
 # Pre-train the ML model artifact during container build
-RUN python3 ml_service/recommend_model.py --train || true
+RUN python ml_service/recommend_model.py --train || true
 
 # Set appropriate permissions for the node user
-RUN chown -R node:node /app
+RUN chown -R node:node /opt/venv /app
 
 # Switch to unprivileged user for container security
 USER node
