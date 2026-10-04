@@ -1,0 +1,232 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+<%- include('partials/alerts') %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  
+  <!-- Welcome Top Banner -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+    <div class="flex items-center space-x-4">
+      <!-- Font Awesome User Logo Badge -->
+      <div class="relative shrink-0">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-sky-600 via-indigo-600 to-emerald-500 flex items-center justify-center text-white text-2xl shadow-md shadow-sky-500/20 ring-4 ring-sky-50">
+          <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-[9px] text-white shadow-sm" title="Active Technologist">
+          <i class="fa-solid fa-check"></i>
+        </div>
+      </div>
+      <div>
+        <div class="flex flex-wrap items-center gap-2">
+          <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Welcome back, <%= user.name %></h1>
+          <span class="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-sky-100 text-sky-800 inline-flex items-center">
+            <i class="fa-solid fa-flask-vial text-[10px] me-1.5 text-sky-600"></i> <%= user.role || 'Packaging Technologist' %>
+          </span>
+        </div>
+        <p class="text-xs text-slate-500 mt-1 flex items-center">
+          <i class="fa-solid fa-building me-1.5 text-slate-400 text-[11px]"></i>
+          <%= user.company || 'Food Tech Labs' %> &bull; Food Formulation & Packaging Command Center
+        </p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <a href="/recommend" class="inline-flex items-center px-4 py-2.5 rounded-xl text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 shadow-md shadow-sky-600/20 transition text-decoration-none">
+        <i class="bi bi-plus-lg me-2"></i> New Assessment
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI SUMMARY METRICS -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    
+    <!-- Metric 1: Total Analyses -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4 card-hover">
+      <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shrink-0">
+        <i class="bi bi-cpu-fill"></i>
+      </div>
+      <div>
+        <div class="text-xs font-medium text-slate-500">Total Analyses Run</div>
+        <div class="text-2xl font-extrabold text-slate-900 mt-0.5"><%= stats.totalAnalyses %></div>
+        <div class="text-[11px] text-sky-600 mt-0.5"><i class="bi bi-activity"></i> Active ML Pipeline</div>
+      </div>
+    </div>
+
+    <!-- Metric 2: Avg Carbon Savings -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4 card-hover">
+      <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl shrink-0">
+        <i class="bi bi-recycle"></i>
+      </div>
+      <div>
+        <div class="text-xs font-medium text-slate-500">Avg Carbon Savings</div>
+        <div class="text-2xl font-extrabold text-emerald-600 mt-0.5"><%= stats.avgCarbonSavings %>%</div>
+        <div class="text-[11px] text-slate-500 mt-0.5">vs standard unoptimized film</div>
+      </div>
+    </div>
+
+    <!-- Metric 3: Top Recommended Material -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4 card-hover">
+      <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl shrink-0">
+        <i class="bi bi-layers-fill"></i>
+      </div>
+      <div class="overflow-hidden">
+        <div class="text-xs font-medium text-slate-500">Top Recommended Polymer</div>
+        <div class="text-sm font-bold text-slate-900 truncate mt-1" title="<%= stats.topMaterial %>">
+          <%= stats.topMaterial %>
+        </div>
+        <div class="text-[11px] text-indigo-600 mt-0.5">Optimal barrier match</div>
+      </div>
+    </div>
+
+    <!-- Metric 4: Most Analyzed Commodity -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center space-x-4 card-hover">
+      <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl shrink-0">
+        <i class="bi bi-basket-fill"></i>
+      </div>
+      <div class="overflow-hidden">
+        <div class="text-xs font-medium text-slate-500">Primary Commodity Class</div>
+        <div class="text-sm font-bold text-slate-900 truncate mt-1">
+          <%= stats.topCommodity %>
+        </div>
+        <div class="text-[11px] text-amber-600 mt-0.5">Category leader</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUICK LAUNCH & RECENT ANALYSES -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Left Column: Recent Analyses Table -->
+    <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-bold text-slate-900">Food Commodity Assessment History</h2>
+          <p class="text-xs text-slate-500">All formulations analyzed with AI barrier calculations</p>
+        </div>
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100">
+          <i class="fa-solid fa-list-check me-1.5 text-sky-500"></i> <%= stats.totalAnalyses %> Recorded
+        </span>
+      </div>
+
+      <div class="overflow-x-auto flex-grow">
+        <% if (recentRecommendations && recentRecommendations.length > 0) { %>
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
+                <th class="py-3 px-4">Commodity</th>
+                <th class="py-3 px-4">Category</th>
+                <th class="py-3 px-4">Recommended Material</th>
+                <th class="py-3 px-4 text-center">Shelf Life</th>
+                <th class="py-3 px-4 text-center">Carbon Savings</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <% recentRecommendations.forEach(item => { %>
+                <tr class="hover:bg-slate-50/80 transition">
+                  <td class="py-3.5 px-4 font-bold text-slate-800">
+                    <a href="/recommend/<%= item._id %>" class="text-slate-900 hover:text-sky-600 text-decoration-none">
+                      <%= item.commodityName %>
+                    </a>
+                    <div class="text-[10px] text-slate-400 font-normal">
+                      <%= new Date(item.createdAt).toLocaleDateString() %>
+                    </div>
+                  </td>
+                  <td class="py-3.5 px-4 text-slate-600">
+                    <span class="px-2 py-0.5 rounded-md bg-slate-100 font-medium"><%= item.commodityType %></span>
+                  </td>
+                  <td class="py-3.5 px-4 font-semibold text-sky-700">
+                    <%= item.recommendation?.recommendedMaterial || 'EVOH High-Barrier' %>
+                    <% if (item.inputs?.packagingType) { %>
+                      <div class="text-[10px] text-slate-400 font-normal truncate max-w-[170px]" title="<%= item.inputs.packagingType %> (<%= item.inputs.packagingSize || '' %>)">
+                        <i class="fa-solid fa-box text-sky-500 me-0.5"></i> <%= item.inputs.packagingType %>
+                      </div>
+                    <% } %>
+                  </td>
+                  <td class="py-3.5 px-4 text-center text-slate-700 font-medium">
+                    <%= item.inputs?.desiredShelfLifeDays || 30 %>d
+                  </td>
+                  <td class="py-3.5 px-4 text-center">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                      +<%= item.recommendation?.carbonSavingsPct || 24 %>%
+                    </span>
+                  </td>
+                  <td class="py-3.5 px-4 text-right space-x-1 whitespace-nowrap">
+                    <a href="/recommend/<%= item._id %>" class="inline-flex items-center p-1.5 rounded-lg text-slate-500 hover:text-sky-600 hover:bg-sky-50 transition" title="View Results">
+                      <i class="bi bi-eye-fill"></i>
+                    </a>
+                    <a href="/recommend/<%= item._id %>/pdf" class="inline-flex items-center p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition" title="Download PDF Datasheet">
+                      <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                    </a>
+                    <form action="/recommend/<%= item._id %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete this packaging assessment record?');">
+                      <button type="submit" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition border-0 bg-transparent" title="Delete Record">
+                        <i class="bi bi-trash-fill"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <div class="py-12 text-center text-slate-400 space-y-3">
+            <i class="bi bi-inbox text-4xl text-slate-300"></i>
+            <p class="text-sm">No packaging assessments recorded yet.</p>
+            <a href="/recommend" class="inline-flex items-center px-4 py-2 rounded-xl text-xs font-semibold text-white bg-sky-600 hover:bg-sky-700 transition text-decoration-none">
+              Run Your First Assessment
+            </a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Right Column: Quick Launcher & Presets -->
+    <div class="lg:col-span-4 space-y-6">
+      
+      <!-- Quick Assessment Card -->
+      <div class="bg-gradient-to-br from-slate-900 to-sky-950 text-white rounded-2xl p-6 shadow-md relative overflow-hidden">
+        <div class="relative z-10 space-y-4">
+          <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-sky-400 text-lg">
+            <i class="bi bi-speedometer2"></i>
+          </div>
+          <h3 class="text-lg font-bold">Launch New Assessment</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Specify food biochemical parameters (moisture, lipid content, pH, and respiration rate) to receive tailored OTR, WVTR, film gauge, and MAP gas formulas.
+          </p>
+          <a href="/recommend" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-xl text-xs font-bold text-slate-900 bg-white hover:bg-slate-100 transition text-decoration-none shadow-sm">
+            Launch Packaging Engine <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Verified Commodity Standards -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Test Preset Profiles</h4>
+        <div class="space-y-2 text-xs">
+          <a href="/recommend" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition text-slate-700 text-decoration-none">
+            <span class="flex items-center font-medium"><i class="bi bi-apple me-2 text-emerald-500"></i> Strawberries (High Resp)</span>
+            <i class="bi bi-chevron-right text-slate-400 text-[10px]"></i>
+          </a>
+          <a href="/recommend" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition text-slate-700 text-decoration-none">
+            <span class="flex items-center font-medium"><i class="bi bi-egg-fried me-2 text-amber-500"></i> Kettle Potato Chips (Crisp)</span>
+            <i class="bi bi-chevron-right text-slate-400 text-[10px]"></i>
+          </a>
+          <a href="/recommend" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition text-slate-700 text-decoration-none">
+            <span class="flex items-center font-medium"><i class="bi bi-fire me-2 text-rose-500"></i> Fresh Prime Beef Steak</span>
+            <i class="bi bi-chevron-right text-slate-400 text-[10px]"></i>
+          </a>
+          <a href="/recommend" class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 hover:text-sky-700 transition text-slate-700 text-decoration-none">
+            <span class="flex items-center font-medium"><i class="bi bi-cup-hot me-2 text-blue-500"></i> Roasted Coffee Beans</span>
+            <i class="bi bi-chevron-right text-slate-400 text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<%- include('partials/footer') %>

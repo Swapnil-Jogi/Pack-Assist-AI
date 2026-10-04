@@ -1,0 +1,310 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+<%- include('partials/alerts') %>
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  
+  <!-- Page Header -->
+  <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 text-[11px] font-bold uppercase tracking-wider mb-2">
+        <i class="bi bi-cpu-fill text-sky-600"></i> AI Recommendation Engine
+      </div>
+      <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Food Commodity Packaging Assessment</h1>
+      <p class="text-xs text-slate-500 mt-1">Configure biochemical and logistical parameters to generate barrier specs and MAP headspace</p>
+    </div>
+
+    <!-- Quick Preset Buttons Bar -->
+    <div class="flex flex-col items-start md:items-end">
+      <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">1-Click Food Presets:</span>
+      <div class="flex flex-wrap gap-1.5">
+        <button type="button" data-preset="strawberries" class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-sky-50 text-slate-700 text-xs font-semibold transition">
+          🍓 Strawberries
+        </button>
+        <button type="button" data-preset="potatoChips" class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-sky-50 text-slate-700 text-xs font-semibold transition">
+          🥔 Potato Chips
+        </button>
+        <button type="button" data-preset="beefSteak" class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-sky-50 text-slate-700 text-xs font-semibold transition">
+          🥩 Beef Ribeye
+        </button>
+        <button type="button" data-preset="cheddarCheese" class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-sky-50 text-slate-700 text-xs font-semibold transition">
+          🧀 Aged Cheese
+        </button>
+        <button type="button" data-preset="roastedCoffee" class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-sky-50 text-slate-700 text-xs font-semibold transition">
+          ☕ Coffee Beans
+        </button>
+        <button type="button" data-preset="frozenBerries" class="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-sky-50 text-slate-700 text-xs font-semibold transition">
+          🫐 Frozen Berries
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Input Form -->
+  <form id="packagingForm" action="/recommend" method="POST" class="space-y-8">
+    
+    <!-- SECTION 1: COMMODITY IDENTITY & CATEGORY -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3 pb-3 border-b border-slate-100">
+        <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center text-sm font-bold">1</div>
+        <h2 class="text-base font-bold text-slate-900">Commodity Classification & Identity</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="commodity_name" class="block text-xs font-semibold text-slate-700 mb-1">Commodity / Food Name *</label>
+          <input type="text" id="commodity_name" name="commodity_name" required
+            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            placeholder="e.g. Fresh Cut Hydroponic Strawberries" value="Fresh Strawberries">
+        </div>
+
+        <div>
+          <label for="commodity_type" class="block text-xs font-semibold text-slate-700 mb-1">Commodity Class / Type *</label>
+          <select id="commodity_type" name="commodity_type" required
+            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <option value="Fresh Produce" selected>Fresh Produce (Fruits, Greens, Mushrooms)</option>
+            <option value="Bakery & Snacks">Bakery & Snacks (Chips, Crackers, Nuts)</option>
+            <option value="Fresh Meat & Poultry">Fresh Meat & Poultry (Beef, Pork, Poultry)</option>
+            <option value="Dairy & Cheese">Dairy & Cheese (Hard Cheese, Butter)</option>
+            <option value="Dry & Dehydrated Goods">Dry & Dehydrated Goods (Grains, Flours, Powders)</option>
+            <option value="Coffee & Spices">Coffee & Spices (Roasted Beans, Ground Spices)</option>
+            <option value="Frozen Foods">Frozen Foods (IQF Fruits, Vegetables, Seafood)</option>
+            <option value="Ready-to-Eat / Deli">Ready-to-Eat / Deli (Prepared Meals, Sandwiches)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: BIOCHEMICAL & COMPOSITIONAL PROFILE -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3 pb-3 border-b border-slate-100">
+        <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold">2</div>
+        <h2 class="text-base font-bold text-slate-900">Food Biochemical & Degradation Matrix</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Moisture Content -->
+        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+          <div class="flex justify-between items-center">
+            <label for="moisture_content" class="text-xs font-semibold text-slate-700">Moisture Content</label>
+            <span id="moisture_val" class="px-2 py-0.5 rounded text-xs font-bold bg-sky-100 text-sky-800">91%</span>
+          </div>
+          <input type="range" id="moisture_content" name="moisture_content" min="0" max="100" step="0.5" value="91.0"
+            data-display="moisture_val" data-unit="%" class="w-full form-range accent-sky-600">
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>0% (Dry)</span>
+            <span>100% (High Water)</span>
+          </div>
+        </div>
+
+        <!-- Fat Content -->
+        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+          <div class="flex justify-between items-center">
+            <label for="fat_content" class="text-xs font-semibold text-slate-700">Fat / Lipid Content</label>
+            <span id="fat_val" class="px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-800">0.4%</span>
+          </div>
+          <input type="range" id="fat_content" name="fat_content" min="0" max="60" step="0.1" value="0.4"
+            data-display="fat_val" data-unit="%" class="w-full form-range accent-amber-600">
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>0% (Lean)</span>
+            <span>60% (High Fat)</span>
+          </div>
+        </div>
+
+        <!-- pH Level -->
+        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+          <div class="flex justify-between items-center">
+            <label for="ph" class="text-xs font-semibold text-slate-700">Acidity / Alkalinity (pH)</label>
+            <span id="ph_val" class="px-2 py-0.5 rounded text-xs font-bold bg-rose-100 text-rose-800">3.5</span>
+          </div>
+          <input type="range" id="ph" name="ph" min="2.0" max="9.0" step="0.1" value="3.5"
+            data-display="ph_val" data-unit="" class="w-full form-range accent-rose-600">
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>2.0 (Acidic)</span>
+            <span>9.0 (Basic)</span>
+          </div>
+        </div>
+
+        <!-- Respiration Rate -->
+        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+          <label for="respiration_rate" class="block text-xs font-semibold text-slate-700">Respiration Rate</label>
+          <select id="respiration_rate" name="respiration_rate" required
+            class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <option value="None">None (Processed / Inert Goods)</option>
+            <option value="Low">Low (Apples, Potatoes)</option>
+            <option value="Medium">Medium (Carrots, Peaches)</option>
+            <option value="High" selected>High (Strawberries, Lettuce)</option>
+            <option value="Very High">Very High (Asparagus, Mushrooms)</option>
+          </select>
+          <p class="text-[10px] text-slate-400">Determines gas equilibrium & micro-perforation</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 3: PACKAGING STRUCTURE & MAP ATMOSPHERE -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3 pb-3 border-b border-slate-100">
+        <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-bold">3</div>
+        <h2 class="text-base font-bold text-slate-900">Packaging Format & Modified Atmosphere (MAP)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Packaging Type -->
+        <div>
+          <label for="packaging_type" class="block text-xs font-semibold text-slate-700 mb-1">
+            <i class="fa-solid fa-box-open text-sky-600 me-1"></i> Packaging Type / Format *
+          </label>
+          <select id="packaging_type" name="packaging_type" required
+            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <option value="Stand-Up Pouch (Doypack)" selected>Stand-Up Pouch (Doypack with Zipper)</option>
+            <option value="Pillow Pouch / Form-Fill-Seal (FFS)">Pillow Pouch / Flow-Wrap FFS</option>
+            <option value="Thermoformed Tray & Lidding Film">Thermoformed Barrier Tray & Lidding</option>
+            <option value="Vacuum Skin Packaging (VSP)">Vacuum Skin Packaging (VSP)</option>
+            <option value="Quad-Seal / Box Bottom Pouch">Quad-Seal / Flat Bottom Box Pouch</option>
+            <option value="Rigid Tub / Injection Container">Rigid Tub / Injection Molded Container</option>
+            <option value="Micro-Perforated Breathable Bag">Micro-Perforated Breathable Bag</option>
+            <option value="Gusseted Foil Bag with Degassing Valve">Gusseted Foil Bag with Degassing Valve</option>
+          </select>
+          <p class="text-[10px] text-slate-400 mt-1">Defines seal geometry, tensile modulus, and structural gauge</p>
+        </div>
+
+        <!-- Packaging Size -->
+        <div>
+          <label for="packaging_size" class="block text-xs font-semibold text-slate-700 mb-1">
+            <i class="fa-solid fa-weight-scale text-indigo-600 me-1"></i> Packaging Size / Volume *
+          </label>
+          <select id="packaging_size" name="packaging_size" required
+            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <option value="Snack / Single-Serve (< 100g)">Snack / Single-Serve (< 100g)</option>
+            <option value="Small Retail Pack (100g - 250g)">Small Retail Pack (100g - 250g)</option>
+            <option value="Retail Standard (250g - 500g)" selected>Retail Standard (250g - 500g)</option>
+            <option value="Family Pack (750g - 1.5kg)">Family Pack (750g - 1.5kg)</option>
+            <option value="Foodservice Bulk (2kg - 5kg)">Foodservice Bulk (2kg - 5kg)</option>
+            <option value="Industrial / Export Bulk (10kg+)">Industrial / Export Bulk (10kg+)</option>
+          </select>
+          <p class="text-[10px] text-slate-400 mt-1">Calibrates headspace volume and drop-impact resistance</p>
+        </div>
+
+        <!-- MAP Required -->
+        <div>
+          <label for="map_required" class="block text-xs font-semibold text-slate-700 mb-1">
+            <i class="fa-solid fa-wind text-emerald-600 me-1"></i> MAP Gas Flushing Required? *
+          </label>
+          <select id="map_required" name="map_required" required
+            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-medium">
+            <option value="Yes" selected>Yes - Active Gas Flush (CO₂ / O₂ / N₂ Mix)</option>
+            <option value="No">No - Standard Atmospheric Air Seal</option>
+            <option value="Auto">Auto - AI Selects Best Preservation Mode</option>
+          </select>
+          <p class="text-[10px] text-slate-400 mt-1">Controls modified headspace vacuum and gas injection ratio</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 4: STORAGE, LOGISTICS & SHELF LIFE TARGETS -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+      <div class="flex items-center space-x-3 pb-3 border-b border-slate-100">
+        <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold">4</div>
+        <h2 class="text-base font-bold text-slate-900">Environmental Logistics & Shelf-Life Objectives</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Desired Shelf Life -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <label for="shelf_life_days" class="text-xs font-semibold text-slate-700">Desired Shelf Life (Days) *</label>
+            <span id="shelf_life_val" class="px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800">14 Days</span>
+          </div>
+          <input type="range" id="shelf_life_days" name="shelf_life_days" min="2" max="365" step="1" value="14"
+            data-display="shelf_life_val" data-unit=" Days" class="w-full form-range accent-indigo-600">
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>2 Days</span>
+            <span>365 Days</span>
+          </div>
+        </div>
+
+        <!-- Storage Temperature -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <label for="storage_temp" class="text-xs font-semibold text-slate-700">Storage Temperature (°C) *</label>
+            <span id="temp_val" class="px-2 py-0.5 rounded text-xs font-bold bg-cyan-100 text-cyan-800">3°C</span>
+          </div>
+          <input type="range" id="storage_temp" name="storage_temp" min="-25" max="40" step="1" value="3"
+            data-display="temp_val" data-unit="°C" class="w-full form-range accent-cyan-600">
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>-25°C (Deep Freeze)</span>
+            <span>40°C (Tropical)</span>
+          </div>
+        </div>
+
+        <!-- Relative Humidity -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <label for="humidity" class="text-xs font-semibold text-slate-700">Ambient Relative Humidity (%) *</label>
+            <span id="humidity_val" class="px-2 py-0.5 rounded text-xs font-bold bg-teal-100 text-teal-800">90%</span>
+          </div>
+          <input type="range" id="humidity_val_input" name="humidity" min="15" max="100" step="1" value="90"
+            data-display="humidity_val" data-unit="%" class="w-full form-range accent-teal-600">
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>15% (Dry Storage)</span>
+            <span>100% (High Humidity)</span>
+          </div>
+        </div>
+
+        <!-- Storage Type -->
+        <div>
+          <label for="storage_type" class="block text-xs font-semibold text-slate-700 mb-1">Storage Condition *</label>
+          <select id="storage_type" name="storage_type" required
+            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <option value="Ambient">Ambient Room Temperature</option>
+            <option value="Refrigerated (2-6°C)" selected>Refrigerated (2-6°C)</option>
+            <option value="Frozen (-18°C)">Frozen Warehouse (-18°C)</option>
+            <option value="Controlled Atmosphere (CA)">Controlled Atmosphere (CA Storage)</option>
+          </select>
+        </div>
+
+        <!-- Transport Conditions -->
+        <div class="md:col-span-2">
+          <label for="transport_conditions" class="block text-xs font-semibold text-slate-700 mb-1">Logistics & Supply Chain Route *</label>
+          <select id="transport_conditions" name="transport_conditions" required
+            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <option value="Standard Ambient">Standard Local Ambient Road Logistics</option>
+            <option value="Cold Chain Refrigerated" selected>Refrigerated Cold Chain Fleet (Strict ±1°C)</option>
+            <option value="Deep Freeze Logistics">Deep Freeze Transport (-18°C to -25°C)</option>
+            <option value="Export / High Vibration">International Export / High Vibration & Ocean Freight</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Submit Action Row -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 bg-slate-900 text-white rounded-2xl shadow-lg">
+      <div class="space-y-1 text-center sm:text-left">
+        <h3 class="text-sm font-bold">Ready to Execute AI Material Analysis</h3>
+        <p class="text-xs text-slate-400">Predicts optimal polymer material, OTR, WVTR, film gauge, and MAP gas headspace.</p>
+      </div>
+      <button type="submit" id="submitBtn"
+        class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-xl text-sm font-bold text-slate-900 bg-emerald-400 hover:bg-emerald-300 shadow-md shadow-emerald-400/20 transition">
+        <i class="bi bi-cpu-fill me-2"></i> Compile Recommendation
+      </button>
+    </div>
+
+  </form>
+
+</div>
+
+<script>
+  document.getElementById('packagingForm').addEventListener('submit', function() {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Calculating Barrier Physics...';
+  });
+</script>
+
+<%- include('partials/footer') %>

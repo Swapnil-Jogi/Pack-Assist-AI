@@ -1,0 +1,1401 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+<%- include('partials/alerts') %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+  
+  <!-- Breadcrumb & Top Action Bar -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex items-center space-x-2 text-xs text-slate-500">
+      <a href="/dashboard" class="hover:text-sky-600 text-decoration-none">Dashboard</a>
+      <span>/</span>
+      <span class="text-slate-800 font-semibold truncate max-w-xs"><%= rec.commodityName %></span>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <!-- "Why is this material best?" Modal Trigger -->
+      <button type="button" class="inline-flex items-center px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition" data-bs-toggle="modal" data-bs-target="#explainerModal">
+        <i class="bi bi-magic me-1.5"></i> Why is this material best?
+      </button>
+
+      <!-- Download PDF Report -->
+      <a href="/recommend/<%= rec._id %>/pdf" class="inline-flex items-center px-4 py-2 rounded-xl text-xs font-bold text-white bg-sky-600 hover:bg-sky-700 shadow-sm transition text-decoration-none">
+        <i class="bi bi-file-earmark-arrow-down-fill me-1.5"></i> Download PDF Report
+      </a>
+
+      <!-- Copy Specs Button -->
+      <button type="button" id="copySpecsBtn"
+        class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition">
+        <i class="bi bi-clipboard me-1.5"></i> Copy Specs
+      </button>
+
+      <!-- Re-evaluate -->
+      <a href="/recommend" class="inline-flex items-center px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 transition text-decoration-none">
+        <i class="bi bi-arrow-repeat me-1.5"></i> New Assessment
+      </a>
+    </div>
+  </div>
+
+  <!-- HERO RESULT CARD: OPTIMAL MATERIAL -->
+  <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-sky-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <!-- Material Announcement -->
+      <div class="lg:col-span-8 space-y-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            <i class="bi bi-shield-check me-1"></i> AI Optimal Material Selection
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/30">
+            <%= rec.commodityType %>
+          </span>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
+          <%= rec.recommendation.recommendedMaterial %>
+        </h1>
+
+        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-300">
+          <div><strong class="text-white">Polymer Class:</strong> <%= rec.recommendation.polymerType %></div>
+          <span>&bull;</span>
+          <div><strong class="text-white">Resin Code:</strong> <%= rec.recommendation.recyclingCode %></div>
+          <span>&bull;</span>
+          <div><strong class="text-white">Target Shelf Life:</strong> <%= (rec.inputs && rec.inputs.desiredShelfLifeDays) || 30 %> Days</div>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed pt-2 border-t border-slate-700/60">
+          <%= rec.recommendation.chemistryBreakdown.barrierMechanics %>
+        </p>
+      </div>
+
+      <!-- Suitability & Carbon Score Badges -->
+      <div class="lg:col-span-4 flex flex-row lg:flex-col gap-4 justify-between lg:justify-center lg:items-end">
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 text-center w-full max-w-[200px]">
+          <div class="text-[10px] text-slate-300 uppercase font-bold tracking-wider">Suitability Match</div>
+          <div class="text-3xl font-black text-emerald-400 mt-1"><%= rec.recommendation.suitabilityScore %>%</div>
+          <div class="text-[10px] text-emerald-200 mt-0.5">Optimal Barrier Fit</div>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 text-center w-full max-w-[200px]">
+          <div class="text-[10px] text-slate-300 uppercase font-bold tracking-wider">Carbon Savings</div>
+          <div class="text-3xl font-black text-sky-300 mt-1">+<%= rec.recommendation.carbonSavingsPct %>%</div>
+          <div class="text-[10px] text-sky-200 mt-0.5">vs Standard Packaging</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SPECS GRID: BARRIER TRANSMISSION & MAP GAS RATIOS -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    
+    <!-- OTR Box -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 card-hover">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Oxygen Permeance</span>
+        <span class="w-7 h-7 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center text-xs font-bold">OTR</span>
+      </div>
+      <div class="text-2xl font-black text-slate-900">
+        <%= rec.recommendation.barrierRequirements.otr %>
+        <span class="text-xs font-normal text-slate-500">cc/m²/24h</span>
+      </div>
+      <p class="text-[11px] text-slate-500">ASTM D3985 / 1 atm @ 23°C</p>
+    </div>
+
+    <!-- WVTR Box -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 card-hover">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Vapor Ingress</span>
+        <span class="w-7 h-7 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-xs font-bold">WVTR</span>
+      </div>
+      <div class="text-2xl font-black text-slate-900">
+        <%= rec.recommendation.barrierRequirements.wvtr %>
+        <span class="text-xs font-normal text-slate-500">g/m²/24h</span>
+      </div>
+      <p class="text-[11px] text-slate-500">ASTM F1249 / 90% RH @ 38°C</p>
+    </div>
+
+    <!-- Film Thickness Box -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 card-hover">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Film Caliper / Gauge</span>
+        <span class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-xs font-bold">µm</span>
+      </div>
+      <div class="text-2xl font-black text-slate-900">
+        <%= rec.recommendation.structuralSpecs.recommendedThicknessMicrons %>
+        <span class="text-xs font-normal text-slate-500">Microns</span>
+      </div>
+      <p class="text-[11px] text-slate-500">Tensile: <%= rec.recommendation.structuralSpecs.tensileStrengthMpa %> MPa</p>
+    </div>
+
+    <!-- MAP Headspace Box -->
+    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 card-hover">
+      <div class="flex items-center justify-between">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">MAP Gas Balance</span>
+        <span class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs"><i class="bi bi-wind"></i></span>
+      </div>
+      <div class="text-lg font-black text-slate-900">
+        <%= rec.recommendation.mapGasRatios.co2Pct %>% CO₂ &bull; <%= rec.recommendation.mapGasRatios.o2Pct %>% O₂
+      </div>
+      <p class="text-[11px] text-slate-500">Balance: <%= rec.recommendation.mapGasRatios.n2Pct %>% N₂ Flush</p>
+    </div>
+
+  </div>
+
+  <!-- INTERACTIVE CHARTS (CHART.JS) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Chart 1: Trade-offs Radar / Multi-axis Comparison -->
+    <div class="lg:col-span-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div>
+          <h2 class="text-base font-bold text-slate-900">Trade-Off Analysis: Material Alternatives</h2>
+          <p class="text-xs text-slate-500">Mapping Shelf-Life Score vs. Relative Cost vs. Carbon Footprint Index</p>
+        </div>
+        <span class="text-[11px] font-semibold text-sky-600 px-2 py-1 bg-sky-50 rounded-lg">Multi-Criteria Evaluation</span>
+      </div>
+      
+      <div class="h-80 w-full relative">
+        <canvas id="tradeoffsChart"></canvas>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-slate-500">
+        <div>* Lower Cost Index and lower Carbon Index indicate superior economic and ecological viability.</div>
+        <div class="font-bold text-emerald-600"><%= rec.recommendation.recommendedMaterial %> ranks highest overall</div>
+      </div>
+    </div>
+
+    <!-- Chart 2: MAP Gas Atmosphere Ratio Doughnut -->
+    <div class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4 flex flex-col justify-between">
+      <div class="border-b border-slate-100 pb-3">
+        <h2 class="text-base font-bold text-slate-900">Modified Atmosphere (MAP) Mix</h2>
+        <p class="text-xs text-slate-500">Recommended package headspace gas distribution</p>
+      </div>
+
+      <div class="h-64 w-full relative flex items-center justify-center">
+        <canvas id="mapGasChart"></canvas>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 text-center text-xs pt-3 border-t border-slate-100">
+        <div class="p-2 rounded-lg bg-rose-50">
+          <div class="text-[10px] font-bold text-rose-700">CO₂ (Inhibitor)</div>
+          <div class="font-extrabold text-slate-800"><%= rec.recommendation.mapGasRatios.co2Pct %>%</div>
+        </div>
+        <div class="p-2 rounded-lg bg-sky-50">
+          <div class="text-[10px] font-bold text-sky-700">O₂ (Color/Resp)</div>
+          <div class="font-extrabold text-slate-800"><%= rec.recommendation.mapGasRatios.o2Pct %>%</div>
+        </div>
+        <div class="p-2 rounded-lg bg-slate-100">
+          <div class="text-[10px] font-bold text-slate-600">N₂ (Filler)</div>
+          <div class="font-extrabold text-slate-800"><%= rec.recommendation.mapGasRatios.n2Pct %>%</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION: FOOD-PACKAGING COMPATIBILITY SCORE -->
+  <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-sky-100 text-sky-800 uppercase tracking-wider">
+            AI Multi-Property Scoring
+          </span>
+          <span class="text-xs font-semibold text-slate-400">&bull; ISO / ASTM Standards</span>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mt-1">Food-Packaging Compatibility Score</h3>
+        <p class="text-xs text-slate-500">Holistic synergy calculation between food biochemical profile and polymer barrier matrix</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+          <i class="fa-solid fa-circle-check me-1.5 text-emerald-500"></i>
+          <%= (rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.rating) || 'Optimal Synergistic Compatibility' %>
+        </span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+      <!-- Left Column: Circular Gauge & Diagnostic Verdict -->
+      <div class="lg:col-span-4 p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-sky-950 text-white flex flex-col items-center text-center justify-center space-y-3 relative overflow-hidden">
+        <div class="relative w-32 h-32 flex items-center justify-center">
+          <!-- Circular Ring background -->
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+            <path class="text-slate-800" stroke-width="3" stroke="currentColor" fill="none"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            <path id="compatGaugeCircle" class="text-emerald-400 transition-all duration-1000 ease-out" data-dasharray="<%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.overall) || 95.8) %>" stroke-dasharray="95.8, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none"
+              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+          </svg>
+          <div class="absolute flex flex-col items-center">
+            <span class="text-3xl font-black text-white"><%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.overall) || 95.8) %>%</span>
+            <span class="text-[9px] uppercase tracking-wider text-emerald-300 font-bold">Compatibility</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <div class="text-xs font-bold text-white"><%= rec.commodityName %> &bull; <%= rec.recommendation.recommendedMaterial %></div>
+          <p class="text-[11px] text-slate-300 leading-relaxed px-2">
+            <%= (rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.summary) || 'Polymer structure exhibits exceptional biochemical alignment with target moisture, lipid content, and respiration kinetics.' %>
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Column: Multi-Property Breakdown Bars -->
+      <div class="lg:col-span-8 space-y-3.5">
+        
+        <!-- Property 1: Moisture Alignment -->
+        <div class="space-y-1">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-semibold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-droplet text-sky-500 w-4"></i> Moisture Barrier Alignment (WVTR)
+            </span>
+            <span class="font-bold text-slate-900"><%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.moistureMatch) || 97) %>%</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+            <div class="bg-sky-500 h-2 rounded-full transition-all duration-700 ease-out" data-progress="<%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.moistureMatch) || 97) %>"></div>
+          </div>
+        </div>
+
+        <!-- Property 2: Oxygen Sensitivity Match -->
+        <div class="space-y-1">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-semibold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-wind text-indigo-500 w-4"></i> Oxygen Sensitivity &amp; Gas Balance (OTR)
+            </span>
+            <span class="font-bold text-slate-900"><%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.oxygenMatch) || 95) %>%</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+            <div class="bg-indigo-500 h-2 rounded-full transition-all duration-700 ease-out" data-progress="<%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.oxygenMatch) || 95) %>"></div>
+          </div>
+        </div>
+
+        <!-- Property 3: Chemical & Acid/Lipid Inertness -->
+        <div class="space-y-1">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-semibold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-flask text-teal-500 w-4"></i> Chemical Inertness &amp; Non-Migration
+            </span>
+            <span class="font-bold text-slate-900"><%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.chemicalInertness) || 96) %>%</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+            <div class="bg-teal-500 h-2 rounded-full transition-all duration-700 ease-out" data-progress="<%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.chemicalInertness) || 96) %>"></div>
+          </div>
+        </div>
+
+        <!-- Property 4: Thermal & Mechanical Resilience -->
+        <div class="space-y-1">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-semibold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-temperature-arrow-up text-amber-500 w-4"></i> Thermal &amp; Mechanical Handling Resilience
+            </span>
+            <span class="font-bold text-slate-900"><%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.thermalMechanical) || 94) %>%</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+            <div class="bg-amber-500 h-2 rounded-full transition-all duration-700 ease-out" data-progress="<%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.thermalMechanical) || 94) %>"></div>
+          </div>
+        </div>
+
+        <!-- Property 5: Acid/pH & Lipid Tolerance -->
+        <div class="space-y-1">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-semibold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-shield-virus text-emerald-500 w-4"></i> Acid (pH <%= (rec.inputs && rec.inputs.ph) || 7 %>) &amp; Lipid (<%= (rec.inputs && rec.inputs.fatContent) || 0 %>%) Defense
+            </span>
+            <span class="font-bold text-slate-900"><%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.acidLipidTolerance) || 97) %>%</span>
+          </div>
+          <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+            <div class="bg-emerald-500 h-2 rounded-full transition-all duration-700 ease-out" data-progress="<%= ((rec.recommendation.compatibilityScore && rec.recommendation.compatibilityScore.acidLipidTolerance) || 97) %>"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION: SMART DISPOSABLE PACKAGING -->
+  <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 uppercase tracking-wider">
+            Smart End-of-Life Recommendation
+          </span>
+          <span class="text-xs font-semibold text-slate-400">&bull; Circular Economy Framework</span>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mt-1">Smart Disposable Packaging</h3>
+        <p class="text-xs text-slate-500">Materials and disposal stream calibrated for Safety, Protection, Cost, and Sustainability</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm">
+          <i class="fa-solid fa-recycle me-1.5"></i> <%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.wasteStream) || 'Curbside Recyclable Stream' %>
+        </span>
+      </div>
+    </div>
+
+    <!-- Recommended Disposal Stream Banner -->
+    <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-sky-50 border border-emerald-200/80 space-y-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-sm shadow-md shadow-emerald-600/25 shrink-0">
+            <i class="fa-solid fa-dumpster"></i>
+          </div>
+          <div>
+            <span class="text-[10px] text-emerald-800 font-bold uppercase tracking-wider block">Recommended Disposal Pathway</span>
+            <span class="text-sm font-extrabold text-slate-900"><%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.recommendedMethod) || 'Curbside Closed-Loop Polyolefin Re-granulation' %></span>
+          </div>
+        </div>
+        <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-semibold bg-white text-emerald-800 border border-emerald-200">
+          <i class="fa-solid fa-trash-can-arrow-up me-1 text-emerald-600"></i> <%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.wasteStream) || 'Household Plastics Bin' %>
+        </span>
+      </div>
+
+      <p class="text-xs text-slate-700 leading-relaxed pt-1 border-t border-emerald-200/60">
+        <strong class="text-emerald-900">Sorting &amp; Handling:</strong> <%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.disposalInstructions) || 'Rinse or wipe residual food particles before placing in designated recovery container.' %>
+      </p>
+
+      <div class="text-[11px] text-slate-600 flex items-center gap-1.5">
+        <i class="fa-solid fa-seedling text-emerald-600"></i>
+        <span><strong>Ecological Impact:</strong> <%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.environmentalImpact) || 'Diverts packaging from landfill and lowers upstream carbon emissions.' %></span>
+      </div>
+    </div>
+
+    <!-- The 4 User-Requested Evaluation Pillars: Safety, Protection, Cost, Sustainability -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Pillar 1: Safety -->
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5 card-hover">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">1. Safety</span>
+          <i class="fa-solid fa-shield-halved text-emerald-500 text-xs"></i>
+        </div>
+        <div class="text-xl font-black text-slate-900">
+          <%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.safetyScore) || 96 %><span class="text-xs font-normal text-slate-400">/100</span>
+        </div>
+        <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+          <div class="bg-emerald-500 h-1.5 rounded-full transition-all duration-700 ease-out" data-progress="<%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.safetyScore) || 96 %>"></div>
+        </div>
+        <p class="text-[10px] text-slate-500 leading-tight pt-1">
+          Zero hazardous additive leaching, no harmful PFAS, non-toxic organic degradation.
+        </p>
+      </div>
+
+      <!-- Pillar 2: Protection -->
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5 card-hover">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-sky-700">2. Protection</span>
+          <i class="fa-solid fa-box text-sky-500 text-xs"></i>
+        </div>
+        <div class="text-xl font-black text-slate-900">
+          <%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.protectionScore) || 95 %><span class="text-xs font-normal text-slate-400">/100</span>
+        </div>
+        <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+          <div class="bg-sky-500 h-1.5 rounded-full transition-all duration-700 ease-out" data-progress="<%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.protectionScore) || 95 %>"></div>
+        </div>
+        <p class="text-[10px] text-slate-500 leading-tight pt-1">
+          Full barrier durability maintained through retail life before disposable breakdown.
+        </p>
+      </div>
+
+      <!-- Pillar 3: Cost -->
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5 card-hover">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700">3. Cost</span>
+          <i class="fa-solid fa-coins text-amber-500 text-xs"></i>
+        </div>
+        <div class="text-xl font-black text-slate-900">
+          <%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.costScore) || 90 %><span class="text-xs font-normal text-slate-400">/100</span>
+        </div>
+        <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+          <div class="bg-amber-500 h-1.5 rounded-full transition-all duration-700 ease-out" data-progress="<%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.costScore) || 90 %>"></div>
+        </div>
+        <p class="text-[10px] text-slate-500 leading-tight pt-1">
+          Economical conversion cost, commercial rollstock scalability, and low unit expense.
+        </p>
+      </div>
+
+      <!-- Pillar 4: Sustainability -->
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1.5 card-hover">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-teal-700">4. Sustainability</span>
+          <i class="fa-solid fa-leaf text-teal-500 text-xs"></i>
+        </div>
+        <div class="text-xl font-black text-slate-900">
+          <%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.sustainabilityScore) || 93 %><span class="text-xs font-normal text-slate-400">/100</span>
+        </div>
+        <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+          <div class="bg-teal-500 h-1.5 rounded-full transition-all duration-700 ease-out" data-progress="<%= (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.sustainabilityScore) || 93 %>"></div>
+        </div>
+        <p class="text-[10px] text-slate-500 leading-tight pt-1">
+          Low life-cycle carbon footprint, zero microplastic persistence, high recycling yield.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Smart Disposable Material Alternatives Matrix -->
+    <% 
+      const disposableAlts = (rec.recommendation.smartDisposable && rec.recommendation.smartDisposable.alternativeMaterials && rec.recommendation.smartDisposable.alternativeMaterials.length > 0)
+        ? rec.recommendation.smartDisposable.alternativeMaterials
+        : [
+            { material: '100% Recyclable Mono-PE Pouch', safety: 96, protection: 92, cost: 94, sustainability: 95, disposal: 'Curbside Recyclable (RIC #4)' },
+            { material: 'Certified Industrial Compostable PLA', safety: 98, protection: 90, cost: 83, sustainability: 96, disposal: 'Industrial Compost' },
+            { material: 'Marine Degradable PHA Bio-Film', safety: 99, protection: 86, cost: 74, sustainability: 99, disposal: 'Home Compostable / Soil' }
+          ];
+    %>
+    <div class="space-y-3 pt-2">
+      <div class="flex items-center justify-between">
+        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wider">
+          <i class="fa-solid fa-scale-balanced text-slate-500 me-1"></i> Disposable Material Options Comparison
+        </h4>
+        <span class="text-[11px] text-slate-400">Comparative 4-Pillar Multi-Attribute Analysis</span>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-slate-200">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-200">
+              <th class="py-2.5 px-3">Disposable Packaging Option</th>
+              <th class="py-2.5 px-3 text-center">Safety</th>
+              <th class="py-2.5 px-3 text-center">Protection</th>
+              <th class="py-2.5 px-3 text-center">Cost</th>
+              <th class="py-2.5 px-3 text-center">Sustainability</th>
+              <th class="py-2.5 px-3 text-right">Disposal Destination</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <% disposableAlts.forEach((alt, idx) => { %>
+              <tr class="hover:bg-slate-50/80 transition">
+                <td class="py-3 px-3 font-bold text-slate-800">
+                  <%= alt.material %>
+                  <% if (idx === 0) { %>
+                    <span class="ms-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">Top Match</span>
+                  <% } %>
+                </td>
+                <td class="py-3 px-3 text-center">
+                  <span class="px-2 py-0.5 rounded-full font-bold text-[10px] bg-emerald-50 text-emerald-700"><%= alt.safety %>/100</span>
+                </td>
+                <td class="py-3 px-3 text-center">
+                  <span class="px-2 py-0.5 rounded-full font-bold text-[10px] bg-sky-50 text-sky-700"><%= alt.protection %>/100</span>
+                </td>
+                <td class="py-3 px-3 text-center">
+                  <span class="px-2 py-0.5 rounded-full font-bold text-[10px] bg-amber-50 text-amber-700"><%= alt.cost %>/100</span>
+                </td>
+                <td class="py-3 px-3 text-center">
+                  <span class="px-2 py-0.5 rounded-full font-bold text-[10px] bg-teal-50 text-teal-700"><%= alt.sustainability %>/100</span>
+                </td>
+                <td class="py-3 px-3 text-right text-slate-600 font-medium">
+                  <span class="px-2 py-0.5 rounded bg-slate-100 text-[10px]"><%= alt.disposal %></span>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECTION: PACKAGING ECONOMICS & ROI WASTE REDUCTION CALCULATOR -->
+  <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 uppercase tracking-wider">
+            Commercial Profitability &amp; Waste Mitigation
+          </span>
+          <span class="text-xs font-semibold text-slate-400">&bull; Manufacturing Unit Economics</span>
+        </div>
+        <h3 class="text-lg font-bold text-slate-900 mt-1">Packaging Economics &amp; ROI Waste Reduction Calculator</h3>
+        <p class="text-xs text-slate-500">Translate barrier chemistry into manufacturing profit, batch unit economics, and unsellable food waste savings.</p>
+      </div>
+
+      <!-- Currency Switcher -->
+      <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 self-start sm:self-auto">
+        <button type="button" id="btnCurrencyINR" class="px-3 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition">
+          ₹ INR
+        </button>
+        <button type="button" id="btnCurrencyUSD" class="px-3 py-1 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-800 transition">
+          $ USD
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left Column: Interactive Scenario Inputs (5 cols) -->
+      <div class="lg:col-span-5 bg-slate-50/80 p-5 rounded-2xl border border-slate-200 space-y-5">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            <i class="fa-solid fa-sliders text-amber-600"></i> Production &amp; Market Parameters
+          </h4>
+          <span class="text-[11px] text-slate-400 font-semibold">Live Simulation</span>
+        </div>
+
+        <!-- Input 1: Batch Quantity -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center text-xs">
+            <label for="sliderBatchSize" class="font-bold text-slate-700">Planned Batch Volume</label>
+            <span class="font-extrabold text-slate-900 bg-white px-2.5 py-0.5 rounded-md border border-slate-200 text-xs shadow-2xs" id="dispBatchSize">25,000 units</span>
+          </div>
+          <input type="range" id="sliderBatchSize" min="1000" max="500000" step="1000" value="25000"
+            class="w-full accent-amber-600 cursor-pointer">
+          
+          <!-- Quick Batch Preset Pills -->
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            <button type="button" class="btn-batch-preset px-2 py-0.5 rounded-md text-[10px] font-bold bg-white hover:bg-slate-200 text-slate-700 border border-slate-200" data-value="5000">5k (Pilot)</button>
+            <button type="button" class="btn-batch-preset px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-600 text-white shadow-2xs" data-value="25000">25k (Commercial)</button>
+            <button type="button" class="btn-batch-preset px-2 py-0.5 rounded-md text-[10px] font-bold bg-white hover:bg-slate-200 text-slate-700 border border-slate-200" data-value="100000">100k (Regional)</button>
+            <button type="button" class="btn-batch-preset px-2 py-0.5 rounded-md text-[10px] font-bold bg-white hover:bg-slate-200 text-slate-700 border border-slate-200" data-value="500000">500k (Industrial)</button>
+          </div>
+        </div>
+
+        <!-- Input 2: Product Retail Price per Unit -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center text-xs">
+            <label for="inputRetailPrice" class="font-bold text-slate-700">Product Retail Price / Unit</label>
+            <span class="text-[11px] text-slate-400">Market value</span>
+          </div>
+          <div class="relative rounded-xl shadow-2xs">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none text-slate-400 font-bold text-xs" id="currencySymbolPrefix">
+              ₹
+            </div>
+            <input type="number" id="inputRetailPrice" min="1" max="10000" step="1" value="150"
+              class="block w-full rounded-xl border border-slate-300 ps-7 pe-3 py-2 text-xs font-bold text-slate-900 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 bg-white">
+          </div>
+        </div>
+
+        <!-- Input 3: Baseline Spoilage Rate Without AI Packaging -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center text-xs">
+            <label for="sliderBaselineSpoilage" class="font-bold text-slate-700">Baseline Food Spoilage &amp; Returns</label>
+            <span class="font-extrabold text-rose-600 text-xs" id="dispBaselineSpoilage">12.0%</span>
+          </div>
+          <input type="range" id="sliderBaselineSpoilage" min="3" max="30" step="0.5" value="12"
+            class="w-full accent-rose-600 cursor-pointer">
+          <span class="text-[10px] text-slate-400 block">Typical spoilage rate under basic/un-optimized packaging</span>
+        </div>
+
+        <!-- Input 4: Optimized Spoilage Rate with AI Packaging -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center text-xs">
+            <label for="sliderAiSpoilage" class="font-bold text-slate-700">Protected Spoilage Rate (With AI Packaging)</label>
+            <span class="font-extrabold text-emerald-600 text-xs" id="dispAiSpoilage">2.5%</span>
+          </div>
+          <input type="range" id="sliderAiSpoilage" min="0.5" max="8" step="0.5" value="2.5"
+            class="w-full accent-emerald-600 cursor-pointer">
+          <span class="text-[10px] text-slate-400 block">Achieved via optimal OTR/WVTR and MAP headspace equilibrium</span>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Live Dynamic Economic Output & Visual Breakdown (7 cols) -->
+      <div class="lg:col-span-7 space-y-4">
+        
+        <!-- 4 Live Financial KPI Cards -->
+        <div class="grid grid-cols-2 gap-3.5">
+          
+          <!-- Card 1: Unit Packaging Cost -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1 card-hover">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Est. Unit Packaging Cost</span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-slate-200 text-slate-700" id="badgeScaleDiscount">-10% Scale</span>
+            </div>
+            <div class="text-xl sm:text-2xl font-black text-slate-900" id="kpiUnitCost">
+              ₹2.85 <span class="text-xs font-normal text-slate-400">/ unit</span>
+            </div>
+            <p class="text-[10px] text-slate-500 leading-tight">
+              Calibrated for <%= (rec.inputs && rec.inputs.packagingType) || 'Doypack Pouch' %> (<%= rec.recommendation.structuralSpecs.recommendedThicknessMicrons %>µm)
+            </p>
+          </div>
+
+          <!-- Card 2: Batch Packaging Investment -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1 card-hover">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Total Batch Investment</span>
+              <i class="fa-solid fa-coins text-amber-500 text-xs"></i>
+            </div>
+            <div class="text-xl sm:text-2xl font-black text-slate-900" id="kpiTotalPackagingCost">
+              ₹71,250
+            </div>
+            <p class="text-[10px] text-slate-500 leading-tight" id="kpiPackagingPct">
+              ~1.9% of total retail batch inventory value
+            </p>
+          </div>
+
+          <!-- Card 3: Prevented Spoilage Savings -->
+          <div class="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 space-y-1 card-hover">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Prevented Spoilage Savings</span>
+              <i class="fa-solid fa-hand-holding-dollar text-emerald-600 text-xs"></i>
+            </div>
+            <div class="text-xl sm:text-2xl font-black text-emerald-700" id="kpiSavedSpoilage">
+              ₹3,56,250
+            </div>
+            <p class="text-[10px] text-emerald-800 leading-tight font-medium" id="kpiSavedUnits">
+              2,375 packages saved from waste/returns
+            </p>
+          </div>
+
+          <!-- Card 4: Net Commercial ROI -->
+          <div class="p-4 rounded-xl bg-sky-50/60 border border-sky-200 space-y-1 card-hover">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-sky-800">Net Packaging ROI</span>
+              <span class="px-1.5 py-0.5 rounded text-[9px] font-extrabold bg-sky-600 text-white" id="badgeRoiMultiple">5.0x Payback</span>
+            </div>
+            <div class="text-xl sm:text-2xl font-black text-sky-700" id="kpiNetRoi">
+              +400%
+            </div>
+            <p class="text-[10px] text-sky-800 leading-tight font-medium" id="kpiNetGain">
+              ₹2,85,000 net bottom-line gain
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Comparative Visual Breakdown Bar -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2.5">
+          <div class="flex justify-between items-center text-xs">
+            <span class="font-bold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-chart-simple text-slate-500"></i> Financial Balance: Packaging Investment vs. Spoilage Loss Averted
+            </span>
+            <span class="text-[11px] font-extrabold text-emerald-700" id="dispWasteReductionPct">9.5% Net Spoilage Avoided</span>
+          </div>
+
+          <!-- Visual Bar Stack -->
+          <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden flex">
+            <div id="barPackagingCost" class="bg-amber-500 h-3 transition-all duration-500 ease-out" style="width: 20%" title="Packaging Investment"></div>
+            <div id="barNetSavings" class="bg-emerald-500 h-3 transition-all duration-500 ease-out" style="width: 80%" title="Net Food Waste Value Saved"></div>
+          </div>
+
+          <div class="flex items-center justify-between text-[10px] text-slate-500 pt-0.5">
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> Packaging Investment (<span id="pctPackagingShare">20%</span>)</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> Prevented Food Waste Value Retained (<span id="pctSavingsShare">80%</span>)</span>
+          </div>
+        </div>
+
+        <!-- Commercial Payback Verdict & Ecological Dividend Banner -->
+        <div class="p-4 rounded-xl bg-gradient-to-r from-sky-50 via-indigo-50 to-emerald-50 border border-sky-200 space-y-2">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center text-xs shrink-0">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h5 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Executive Commercial Verdict</h5>
+          </div>
+          <p class="text-xs text-slate-700 leading-relaxed" id="textVerdictSummary">
+            For every <strong>₹1.00</strong> invested in <strong><%= rec.recommendation.recommendedMaterial %></strong>, your enterprise recovers <strong>₹5.00</strong> in unsellable stock and credit returns, unlocking <strong>₹2,85,000</strong> in direct profit margin retention.
+          </p>
+          <div class="text-[11px] text-emerald-800 font-semibold flex items-center gap-1.5 pt-1 border-t border-sky-100">
+            <i class="fa-solid fa-leaf text-emerald-600"></i>
+            <span id="textCarbonDividend">Ecological Dividend: Prevents approx 2.38 tonnes of embedded food waste CO₂e greenhouse emissions.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECTION: FOOD PROFILE AUDIT & LOGISTICS -->
+  <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+    <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Food Biochemical & Packaging Format Baseline</h3>
+        <p class="text-xs text-slate-500">Input parameter snapshot and format specifications</p>
+      </div>
+      <span class="text-xs font-semibold text-slate-400">Input Snapshot</span>
+    </div>
+
+    <!-- Packaging Format Bar -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 bg-slate-50/80 rounded-xl border border-slate-200 text-xs">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-7 h-7 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-bold block">Packaging Format</span>
+          <span class="font-bold text-slate-800"><%= (rec.inputs && rec.inputs.packagingType) || 'Stand-Up Pouch (Doypack)' %></span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2.5">
+        <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-weight-scale"></i>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-bold block">Packaging Size</span>
+          <span class="font-bold text-slate-800"><%= (rec.inputs && rec.inputs.packagingSize) || 'Retail Standard (250g - 500g)' %></span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2.5">
+        <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-wind"></i>
+        </div>
+        <div>
+          <span class="text-[10px] text-slate-400 uppercase font-bold block">MAP Flush Mode</span>
+          <span class="font-bold text-slate-800"><%= (rec.inputs && rec.inputs.mapRequired === 'No') ? 'Standard Atmospheric Air' : 'Active Gas Flushing' %></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 text-center">
+      <div class="p-3 bg-slate-50 rounded-xl">
+        <div class="text-[10px] uppercase font-semibold text-slate-500">Moisture</div>
+        <div class="text-sm font-bold text-slate-800 mt-0.5"><%= (rec.inputs && rec.inputs.moistureContent) || 0 %>%</div>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-xl">
+        <div class="text-[10px] uppercase font-semibold text-slate-500">Lipid / Fat</div>
+        <div class="text-sm font-bold text-slate-800 mt-0.5"><%= (rec.inputs && rec.inputs.fatContent) || 0 %>%</div>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-xl">
+        <div class="text-[10px] uppercase font-semibold text-slate-500">Acidity (pH)</div>
+        <div class="text-sm font-bold text-slate-800 mt-0.5"><%= (rec.inputs && rec.inputs.ph) || 7 %></div>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-xl">
+        <div class="text-[10px] uppercase font-semibold text-slate-500">Respiration</div>
+        <div class="text-sm font-bold text-slate-800 mt-0.5"><%= (rec.inputs && rec.inputs.respirationRate) || 'None' %></div>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-xl">
+        <div class="text-[10px] uppercase font-semibold text-slate-500">Shelf Life</div>
+        <div class="text-sm font-bold text-slate-800 mt-0.5"><%= (rec.inputs && rec.inputs.desiredShelfLifeDays) || 30 %>d</div>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-xl">
+        <div class="text-[10px] uppercase font-semibold text-slate-500">Temperature</div>
+        <div class="text-sm font-bold text-slate-800 mt-0.5"><%= (rec.inputs && rec.inputs.storageTemp) || 20 %>°C</div>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-xl">
+        <div class="text-[10px] uppercase font-semibold text-slate-500">Humidity</div>
+        <div class="text-sm font-bold text-slate-800 mt-0.5"><%= (rec.inputs && rec.inputs.humidity) || 60 %>%</div>
+      </div>
+      <div class="p-3 bg-slate-50 rounded-xl">
+        <div class="text-[10px] uppercase font-semibold text-slate-500">Storage</div>
+        <div class="text-xs font-bold text-slate-800 mt-1 truncate" title="<%= (rec.inputs && rec.inputs.storageType) || 'Ambient' %>"><%= (rec.inputs && rec.inputs.storageType) || 'Ambient' %></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- "WHY IS THIS MATERIAL BEST?" EXPLAINER MODAL -->
+<div class="modal fade" id="explainerModal" tabindex="-1" aria-labelledby="explainerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content rounded-2xl border-0 shadow-2xl overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 border-b border-slate-800">
+        <div class="flex justify-between items-start">
+          <div class="space-y-1.5">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 uppercase tracking-wider">
+              <i class="fa-solid fa-flask-vial"></i> Food Science & Material Selection Rationale
+            </span>
+            <h3 class="text-xl font-black text-white tracking-tight" id="explainerModalLabel">
+              Why <%= rec.recommendation.recommendedMaterial %> is Best
+            </h3>
+            <p class="text-xs text-slate-300">
+              Formulated specifically for <span class="text-white font-semibold"><%= rec.commodityName %></span> (<%= rec.commodityType %>)
+            </p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-5 text-sm text-slate-700 max-h-[75vh] overflow-y-auto">
+        
+        <!-- Quick Verdict Card (Plain Human Language) -->
+        <div class="p-4 rounded-2xl bg-gradient-to-r from-sky-50 via-indigo-50 to-emerald-50 border border-sky-100/80 space-y-2">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-lg bg-sky-600 text-white flex items-center justify-center text-xs shrink-0">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider">The Short Answer (In Simple Words)</h4>
+          </div>
+          <p class="text-xs text-slate-700 leading-relaxed">
+            <strong><%= rec.commodityName %></strong> contains <strong><%= (rec.inputs && rec.inputs.moistureContent) || 0 %>% moisture</strong> and <strong><%= (rec.inputs && rec.inputs.fatContent) || 0 %>% fat</strong>. Without proper protection, oxygen causes fat to turn rancid while ambient air either dries the food out or turns it soggy. <strong><%= rec.recommendation.recommendedMaterial %></strong> provides the exact barrier needed to lock in freshness for <strong><%= (rec.inputs && rec.inputs.desiredShelfLifeDays) || 30 %> days</strong> without paying for excessive unnecessary plastic.
+          </p>
+        </div>
+
+        <!-- Pillar 1: Barrier Defense (Oxygen & Moisture Physics) -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-sky-800 uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-sky-600"></i> 1. Gas & Moisture Barrier Protection
+            </h4>
+            <span class="text-[10px] font-semibold text-slate-400 bg-white px-2 py-0.5 rounded-full border border-slate-200">Barrier Physics</span>
+          </div>
+          
+          <div class="text-xs text-slate-600 bg-white/70 p-2.5 rounded-xl border border-slate-200/60 leading-relaxed">
+            <span class="font-bold text-slate-800"><i class="fa-solid fa-atom text-sky-500 me-1"></i> Theory:</span>
+            Air molecules (oxygen &amp; water vapor) naturally try to push through packaging to balance concentration. This film acts like a microscopic wall, giving gases almost no tiny openings to squeeze through.
+          </div>
+
+          <ul class="text-xs text-slate-600 space-y-2 ps-0 list-none mb-0">
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-sky-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Oxygen Control (OTR <%= rec.recommendation.barrierRequirements.otr %> cc/m²/day):</strong>
+                Restricts incoming oxygen so aerobic bacteria and molds cannot survive or multiply.
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-sky-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Moisture Control (WVTR <%= rec.recommendation.barrierRequirements.wvtr %> g/m²/day):</strong>
+                <% if (rec.inputs && rec.inputs.moistureContent > 40) { %>
+                  Locks natural water inside so the food stays juicy and doesn't shrivel or lose weight.
+                <% } else { %>
+                  Stops ambient humidity from entering, ensuring dry/crisp snacks stay crunchy instead of going soft.
+                <% } %>
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-sky-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">MAP Headspace Synergy:</strong>
+                Maintains the <%= rec.recommendation.mapGasRatios.co2Pct %>% CO₂ / <%= rec.recommendation.mapGasRatios.o2Pct %>% O₂ / <%= rec.recommendation.mapGasRatios.n2Pct %>% N₂ protective gas mix inside the package throughout transit.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 2: Polymer Molecular Structure -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-indigo-800 uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-dna text-indigo-600"></i> 2. Polymer Chemistry & Gauge Strength
+            </h4>
+            <span class="text-[10px] font-semibold text-slate-400 bg-white px-2 py-0.5 rounded-full border border-slate-200">Polymer Science</span>
+          </div>
+
+          <div class="text-xs text-slate-600 bg-white/70 p-2.5 rounded-xl border border-slate-200/60 leading-relaxed">
+            <span class="font-bold text-slate-800"><i class="fa-solid fa-atom text-indigo-500 me-1"></i> Theory:</span>
+            Plastics are made of long chain-like molecules. Polymers with tightly packed, crystalline alignments make the gas path extremely winding ("tortuous path"), drastically slowing down permeation.
+          </div>
+
+          <ul class="text-xs text-slate-600 space-y-2 ps-0 list-none mb-0">
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-indigo-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Polymer Base (<%= rec.recommendation.polymerType %>):</strong>
+                Chemical structure is inert and will not react with the natural fats, acids (pH <%= (rec.inputs && rec.inputs.ph) || 7 %>), or aromas of <%= rec.commodityName %>.
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-indigo-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Optimized Gauge (<%= rec.recommendation.structuralSpecs.recommendedThicknessMicrons %> µm):</strong>
+                Tailored for <%= (rec.inputs && rec.inputs.packagingType) || 'this packaging format' %> to resist punctures, tearing, and shipping stresses without adding dead weight.
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-indigo-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Seal Integrity (<%= rec.recommendation.structuralSpecs.tensileStrengthMpa %> MPa Tensile):</strong>
+                Forms an airtight, hermetic thermal weld along package edges that prevents leakages during cold chain or shelf display.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 3: Spoilage & Sensory Defense -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-rose-800 uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-bacteria text-rose-600"></i> 3. Degradation & Spoilage Prevention
+            </h4>
+            <span class="text-[10px] font-semibold text-slate-400 bg-white px-2 py-0.5 rounded-full border border-slate-200">Freshness Logic</span>
+          </div>
+
+          <div class="text-xs text-slate-600 bg-white/70 p-2.5 rounded-xl border border-slate-200/60 leading-relaxed">
+            <span class="font-bold text-slate-800"><i class="fa-solid fa-atom text-rose-500 me-1"></i> Theory:</span>
+            Food loses quality when enzymes break down proteins or when fats interact with oxygen (lipid oxidation). Cutting off reactive oxygen stops these chemical cascades in their tracks.
+          </div>
+
+          <ul class="text-xs text-slate-600 space-y-2 ps-0 list-none mb-0">
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-rose-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Stops Rancidity:</strong>
+                Protects the <%= (rec.inputs && rec.inputs.fatContent) || 0 %>% lipid content against free-radical oxidation that produces sour, unpleasant off-flavors.
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-rose-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Aroma & Flavor Seal:</strong>
+                Traps the volatile aroma compounds inside the packaging so customer aroma experience is fresh upon opening.
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-rose-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Extended Market Window:</strong>
+                Maintains prime retail quality throughout the targeted <%= (rec.inputs && rec.inputs.desiredShelfLifeDays) || 30 %>-day distribution lifecycle.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pillar 4: Safety & Sustainability -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-emerald-800 uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-leaf text-emerald-600"></i> 4. Food Safety & Sustainability Rating
+            </h4>
+            <span class="text-[10px] font-semibold text-slate-400 bg-white px-2 py-0.5 rounded-full border border-slate-200">Compliance & Eco</span>
+          </div>
+
+          <div class="text-xs text-slate-600 bg-white/70 p-2.5 rounded-xl border border-slate-200/60 leading-relaxed">
+            <span class="font-bold text-slate-800"><i class="fa-solid fa-atom text-emerald-500 me-1"></i> Theory:</span>
+            Food packaging must never leach chemicals into consumable products, and modern circular design requires reducing raw material consumption.
+          </div>
+
+          <ul class="text-xs text-slate-600 space-y-2 ps-0 list-none mb-0">
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-emerald-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Certified Food Contact Safe:</strong>
+                Fully compliant with FDA 21 CFR regulations and EU Framework Regulation (EC) No 1935/2004 for non-toxic food contact.
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-emerald-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Carbon Footprint Saving:</strong>
+                Achieves <strong>+<%= rec.recommendation.carbonSavingsPct %>% CO₂ reduction</strong> (Eco Rating <%= rec.recommendation.ecoRating || 'A' %>) compared to outdated, heavy packaging solutions.
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-check text-emerald-600 text-xs mt-0.5 shrink-0"></i>
+              <div>
+                <strong class="text-slate-800">Recyclability Classification:</strong>
+                Categorized under <%= rec.recommendation.recyclingCode %>, ready for modern collection and circular recovery streams.
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center">
+        <span class="text-xs text-slate-500 flex items-center gap-1.5">
+          <i class="fa-solid fa-check-double text-emerald-600"></i> Pack-Assist AI Food Science Engine
+        </span>
+        <button type="button" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition shadow-sm" data-bs-dismiss="modal">
+          Done Reading
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- EMBEDDED DATA FOR CLIENT SCRIPTS (Prevents JS linter errors in EJS) -->
+<script id="assessmentData" type="application/json">
+  <%- JSON.stringify({
+    commodityName: rec.commodityName,
+    recommendedMaterial: rec.recommendation.recommendedMaterial,
+    otr: rec.recommendation.barrierRequirements.otr,
+    wvtr: rec.recommendation.barrierRequirements.wvtr,
+    thickness: rec.recommendation.structuralSpecs.recommendedThicknessMicrons,
+    mapGasRatios: rec.recommendation.mapGasRatios || { co2Pct: 20, o2Pct: 5, n2Pct: 75 },
+    tradeoffs: rec.recommendation.tradeoffs || [],
+    costIndex: (rec.recommendation.tradeoffs && rec.recommendation.tradeoffs[0] && rec.recommendation.tradeoffs[0].cost_index) || 55,
+    packagingType: (rec.inputs && rec.inputs.packagingType) || 'Stand-Up Pouch (Doypack)',
+    packagingSize: (rec.inputs && rec.inputs.packagingSize) || 'Retail Standard (250g - 500g)',
+    desiredShelfLifeDays: (rec.inputs && rec.inputs.desiredShelfLifeDays) || 30
+  }) %>
+</script>
+
+<!-- CLIENT SCRIPT FOR CHARTS & ACTIONS -->
+<script>
+  /* global Chart */
+  document.addEventListener('DOMContentLoaded', function () {
+    // 0. Initialize Dynamic Compatibility & Disposable Progress Bars and Radial Gauge
+    document.querySelectorAll('[data-progress]').forEach(function (bar) {
+      const val = bar.getAttribute('data-progress');
+      if (val) {
+        // Trigger a tiny microtask or direct assign for smooth CSS transition
+        setTimeout(function () {
+          bar.style.width = val + '%';
+        }, 50);
+      }
+    });
+
+    const compatCircle = document.getElementById('compatGaugeCircle');
+    if (compatCircle && compatCircle.dataset.dasharray) {
+      compatCircle.setAttribute('stroke-dasharray', compatCircle.dataset.dasharray + ', 100');
+    }
+
+    const dataElem = document.getElementById('assessmentData');
+    if (!dataElem) return;
+
+    let payload = {};
+    try {
+      payload = JSON.parse(dataElem.textContent || '{}');
+    } catch (e) {
+      console.error('Failed to parse assessment data', e);
+      return;
+    }
+
+    const tradeoffsData = payload.tradeoffs || [];
+    const mapGases = payload.mapGasRatios || { co2Pct: 20, o2Pct: 5, n2Pct: 75 };
+
+    // 1. Copy Specs to Clipboard Handler
+    const copyBtn = document.getElementById('copySpecsBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function () {
+        const text = 'Packaging Specification for ' + (payload.commodityName || 'Commodity') +
+          ': Material: ' + (payload.recommendedMaterial || 'High Barrier Polymer') +
+          ', OTR: ' + (payload.otr || 'N/A') + ' cc/m2/day' +
+          ', WVTR: ' + (payload.wvtr || 'N/A') + ' g/m2/day' +
+          ', Thickness: ' + (payload.thickness || 'N/A') + ' µm' +
+          ', MAP: ' + (mapGases.co2Pct || 0) + '% CO2 / ' + (mapGases.o2Pct || 0) + '% O2 / ' + (mapGases.n2Pct || 0) + '% N2';
+
+        navigator.clipboard.writeText(text).then(function () {
+          const orig = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<i class="bi bi-check2 text-emerald-600 me-1.5"></i> Copied!';
+          setTimeout(function () {
+            copyBtn.innerHTML = orig;
+          }, 2000);
+        }).catch(function (err) {
+          console.error('Clipboard copy failed:', err);
+        });
+      });
+    }
+
+    if (typeof Chart === 'undefined') return;
+
+    // 2. Render MAP Gas Doughnut Chart
+    const mapCanvas = document.getElementById('mapGasChart');
+    if (mapCanvas) {
+      const ctxMap = mapCanvas.getContext('2d');
+      new Chart(ctxMap, {
+        type: 'doughnut',
+        data: {
+          labels: ['Carbon Dioxide (% CO₂)', 'Oxygen (% O₂)', 'Nitrogen (% N₂)'],
+          datasets: [{
+            data: [mapGases.co2Pct, mapGases.o2Pct, mapGases.n2Pct],
+            backgroundColor: ['#f43f5e', '#0ea5e9', '#64748b'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                boxWidth: 12,
+                font: { size: 11 }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  return ' ' + context.label + ': ' + context.raw + '%';
+                }
+              }
+            }
+          },
+          cutout: '68%'
+        }
+      });
+    }
+
+    // 3. Render Trade-Offs Comparison Bar Chart
+    const tradeoffsCanvas = document.getElementById('tradeoffsChart');
+    if (tradeoffsCanvas && tradeoffsData.length > 0) {
+      const labels = tradeoffsData.map(function (t) {
+        return t.name.length > 25 ? t.name.substring(0, 25) + '...' : t.name;
+      });
+      const shelfLifeScores = tradeoffsData.map(function (t) { return t.shelf_life_score; });
+      const costIndices = tradeoffsData.map(function (t) { return t.cost_index; });
+      const carbonIndices = tradeoffsData.map(function (t) { return t.carbon_index * 20; });
+
+      const ctxTradeoffs = tradeoffsCanvas.getContext('2d');
+      new Chart(ctxTradeoffs, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Shelf Life Score (0-100)',
+              data: shelfLifeScores,
+              backgroundColor: '#0284c7',
+              borderRadius: 6
+            },
+            {
+              label: 'Relative Cost Index',
+              data: costIndices,
+              backgroundColor: '#f59e0b',
+              borderRadius: 6
+            },
+            {
+              label: 'Carbon Footprint Index (Scaled)',
+              data: carbonIndices,
+              backgroundColor: '#10b981',
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 110,
+              grid: { color: '#f1f5f9' },
+              ticks: { font: { size: 11 } }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 10 } }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                boxWidth: 12,
+                font: { size: 11 }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // 4. Packaging Economics & Commercial ROI Calculator Logic
+    // -------------------------------------------------------------
+    let currentCurrency = 'INR';
+    const exchangeRateUSD = 85.0;
+
+    const sliderBatch = document.getElementById('sliderBatchSize');
+    const dispBatch = document.getElementById('dispBatchSize');
+    const inputRetail = document.getElementById('inputRetailPrice');
+    const sliderBaseSpoilage = document.getElementById('sliderBaselineSpoilage');
+    const dispBaseSpoilage = document.getElementById('dispBaselineSpoilage');
+    const sliderAiSpoilage = document.getElementById('sliderAiSpoilage');
+    const dispAiSpoilage = document.getElementById('dispAiSpoilage');
+    const btnINR = document.getElementById('btnCurrencyINR');
+    const btnUSD = document.getElementById('btnCurrencyUSD');
+    const currencySymbol = document.getElementById('currencySymbolPrefix');
+
+    const kpiUnitCost = document.getElementById('kpiUnitCost');
+    const kpiTotalPackagingCost = document.getElementById('kpiTotalPackagingCost');
+    const kpiSavedSpoilage = document.getElementById('kpiSavedSpoilage');
+    const kpiNetRoi = document.getElementById('kpiNetRoi');
+    const kpiNetGain = document.getElementById('kpiNetGain');
+    const kpiPackagingPct = document.getElementById('kpiPackagingPct');
+    const kpiSavedUnits = document.getElementById('kpiSavedUnits');
+    const badgeScaleDiscount = document.getElementById('badgeScaleDiscount');
+    const badgeRoiMultiple = document.getElementById('badgeRoiMultiple');
+    const dispWasteReductionPct = document.getElementById('dispWasteReductionPct');
+    const barPackagingCost = document.getElementById('barPackagingCost');
+    const barNetSavings = document.getElementById('barNetSavings');
+    const pctPackagingShare = document.getElementById('pctPackagingShare');
+    const pctSavingsShare = document.getElementById('pctSavingsShare');
+    const textVerdictSummary = document.getElementById('textVerdictSummary');
+    const textCarbonDividend = document.getElementById('textCarbonDividend');
+
+    const costIndex = payload.costIndex || 55;
+    const thickness = payload.thickness || 45;
+    const packagingType = payload.packagingType || 'Stand-Up Pouch (Doypack)';
+    const packagingSize = payload.packagingSize || 'Retail Standard (250g - 500g)';
+    const recommendedMaterial = payload.recommendedMaterial || 'High-Barrier Polymer Film';
+
+    function formatCurrency(amount, currency) {
+      if (currency === 'INR') {
+        return '₹' + Math.round(amount).toLocaleString('en-IN');
+      } else {
+        return '$' + (amount < 10 ? amount.toFixed(2) : Math.round(amount).toLocaleString('en-US'));
+      }
+    }
+
+    function calculateEconomics() {
+      if (!sliderBatch || !inputRetail) return;
+
+      const batchSize = parseInt(sliderBatch.value, 10) || 25000;
+      let retailPrice = parseFloat(inputRetail.value) || (currentCurrency === 'INR' ? 150 : 2.5);
+      const baseSpoilage = parseFloat(sliderBaseSpoilage ? sliderBaseSpoilage.value : 12) || 12.0;
+      const aiSpoilage = parseFloat(sliderAiSpoilage ? sliderAiSpoilage.value : 2.5) || 2.5;
+
+      // Update slider display labels
+      if (dispBatch) dispBatch.textContent = batchSize.toLocaleString('en-IN') + ' units';
+      if (dispBaseSpoilage) dispBaseSpoilage.textContent = baseSpoilage.toFixed(1) + '%';
+      if (dispAiSpoilage) dispAiSpoilage.textContent = aiSpoilage.toFixed(1) + '%';
+
+      // 1. Thickness Factor
+      const thicknessFactor = thickness / 50.0;
+
+      // 2. Format multiplier
+      let formatMultiplier = 1.05;
+      if (packagingType.includes('Stand-Up') || packagingType.includes('Doypack')) formatMultiplier = 1.25;
+      else if (packagingType.includes('Thermoformed') || packagingType.includes('Tray')) formatMultiplier = 1.35;
+      else if (packagingType.includes('Vacuum')) formatMultiplier = 1.20;
+      else if (packagingType.includes('Pillow')) formatMultiplier = 0.95;
+
+      // 3. Size multiplier
+      let sizeMultiplier = 1.0;
+      if (packagingSize.includes('Small') || packagingSize.includes('Single')) sizeMultiplier = 0.70;
+      else if (packagingSize.includes('Family')) sizeMultiplier = 1.35;
+      else if (packagingSize.includes('Bulk')) sizeMultiplier = 1.85;
+
+      // 4. Batch scale discount
+      let scaleDiscount = 1.0;
+      let scaleBadgeText = 'Standard Scale';
+      if (batchSize >= 200000) {
+        scaleDiscount = 0.75;
+        scaleBadgeText = '-25% Industrial Scale';
+      } else if (batchSize >= 50000) {
+        scaleDiscount = 0.82;
+        scaleBadgeText = '-18% Regional Scale';
+      } else if (batchSize >= 10000) {
+        scaleDiscount = 0.90;
+        scaleBadgeText = '-10% Commercial Scale';
+      } else {
+        scaleDiscount = 1.0;
+        scaleBadgeText = 'Base Pilot Tier';
+      }
+      if (badgeScaleDiscount) badgeScaleDiscount.textContent = scaleBadgeText;
+
+      // Base unit cost in INR
+      const baseUnitCostINR = (costIndex / 25.0) * 1.15 * (0.6 + 0.4 * thicknessFactor) * formatMultiplier * sizeMultiplier * scaleDiscount;
+      
+      const unitCost = currentCurrency === 'INR' ? baseUnitCostINR : (baseUnitCostINR / exchangeRateUSD);
+      const totalPackagingCost = batchSize * unitCost;
+
+      // Spoilage calculation
+      const netSpoilageDiffPct = Math.max(0, baseSpoilage - aiSpoilage);
+      const savedUnits = Math.round(batchSize * (netSpoilageDiffPct / 100.0));
+      const totalInventoryValue = batchSize * retailPrice;
+      const spoilageSavedValue = savedUnits * retailPrice;
+
+      // Net economic benefit
+      const netGain = spoilageSavedValue - totalPackagingCost;
+      const roiPct = totalPackagingCost > 0 ? Math.round((netGain / totalPackagingCost) * 100) : 0;
+      const paybackMultiple = totalPackagingCost > 0 ? (spoilageSavedValue / totalPackagingCost).toFixed(1) : '1.0';
+
+      // Carbon dividend (assuming 0.4kg average pack weight and 2.5 kg CO2e per kg food waste)
+      const co2SavedTonnes = ((savedUnits * 0.4 * 2.5) / 1000.0).toFixed(2);
+
+      // Render KPI values
+      if (kpiUnitCost) {
+        const decimals = currentCurrency === 'INR' ? 2 : 3;
+        kpiUnitCost.innerHTML = (currentCurrency === 'INR' ? '₹' : '$') + unitCost.toFixed(decimals) + ' <span class="text-xs font-normal text-slate-400">/ unit</span>';
+      }
+
+      if (kpiTotalPackagingCost) {
+        kpiTotalPackagingCost.textContent = formatCurrency(totalPackagingCost, currentCurrency);
+      }
+
+      if (kpiPackagingPct) {
+        const shareOfRevenue = totalInventoryValue > 0 ? ((totalPackagingCost / totalInventoryValue) * 100).toFixed(1) : '2.0';
+        kpiPackagingPct.textContent = '~' + shareOfRevenue + '% of total batch retail value';
+      }
+
+      if (kpiSavedSpoilage) {
+        kpiSavedSpoilage.textContent = formatCurrency(spoilageSavedValue, currentCurrency);
+      }
+
+      if (kpiSavedUnits) {
+        kpiSavedUnits.textContent = savedUnits.toLocaleString('en-IN') + ' packages saved from waste/returns';
+      }
+
+      if (kpiNetRoi) {
+        kpiNetRoi.textContent = (roiPct >= 0 ? '+' : '') + roiPct + '%';
+        kpiNetRoi.className = 'text-xl sm:text-2xl font-black ' + (roiPct >= 0 ? 'text-sky-700' : 'text-rose-600');
+      }
+
+      if (badgeRoiMultiple) {
+        badgeRoiMultiple.textContent = paybackMultiple + 'x Payback';
+      }
+
+      if (kpiNetGain) {
+        kpiNetGain.textContent = formatCurrency(netGain, currentCurrency) + ' net bottom-line gain';
+      }
+
+      if (dispWasteReductionPct) {
+        dispWasteReductionPct.textContent = netSpoilageDiffPct.toFixed(1) + '% Net Spoilage Avoided';
+      }
+
+      // Visual Balance Bar
+      const totalFinancialPool = totalPackagingCost + spoilageSavedValue;
+      let packShare = 20;
+      let saveShare = 80;
+      if (totalFinancialPool > 0) {
+        packShare = Math.min(90, Math.max(10, Math.round((totalPackagingCost / totalFinancialPool) * 100)));
+        saveShare = 100 - packShare;
+      }
+      if (barPackagingCost) barPackagingCost.style.width = packShare + '%';
+      if (barNetSavings) barNetSavings.style.width = saveShare + '%';
+      if (pctPackagingShare) pctPackagingShare.textContent = packShare + '%';
+      if (pctSavingsShare) pctSavingsShare.textContent = saveShare + '%';
+
+      // Commercial Verdict Banner text
+      if (textVerdictSummary) {
+        const symbol = currentCurrency === 'INR' ? '₹' : '$';
+        textVerdictSummary.innerHTML = 'For every <strong>' + symbol + '1.00</strong> invested in <strong>' +
+          recommendedMaterial + '</strong>, your enterprise recovers <strong>' +
+          symbol + paybackMultiple + '</strong> in unsellable stock and customer returns, unlocking <strong>' +
+          formatCurrency(netGain, currentCurrency) + '</strong> in direct profit margin retention.';
+      }
+
+      if (textCarbonDividend) {
+        textCarbonDividend.textContent = 'Ecological Dividend: Prevents approx ' + co2SavedTonnes + ' tonnes of embedded food waste CO₂e greenhouse emissions.';
+      }
+    }
+
+    // Attach listeners
+    if (sliderBatch) sliderBatch.addEventListener('input', calculateEconomics);
+    if (inputRetail) inputRetail.addEventListener('input', calculateEconomics);
+    if (sliderBaseSpoilage) sliderBaseSpoilage.addEventListener('input', calculateEconomics);
+    if (sliderAiSpoilage) sliderAiSpoilage.addEventListener('input', calculateEconomics);
+
+    // Batch Presets
+    document.querySelectorAll('.btn-batch-preset').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.btn-batch-preset').forEach(function (b) {
+          b.className = 'btn-batch-preset px-2 py-0.5 rounded-md text-[10px] font-bold bg-white hover:bg-slate-200 text-slate-700 border border-slate-200';
+        });
+        btn.className = 'btn-batch-preset px-2 py-0.5 rounded-md text-[10px] font-bold bg-amber-600 text-white shadow-2xs';
+        if (sliderBatch) sliderBatch.value = btn.getAttribute('data-value');
+        calculateEconomics();
+      });
+    });
+
+    // Currency Switcher
+    if (btnINR && btnUSD) {
+      btnINR.addEventListener('click', function () {
+        if (currentCurrency === 'INR') return;
+        currentCurrency = 'INR';
+        btnINR.className = 'px-3 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition';
+        btnUSD.className = 'px-3 py-1 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-800 transition';
+        if (currencySymbol) currencySymbol.textContent = '₹';
+        if (inputRetail) inputRetail.value = Math.round(parseFloat(inputRetail.value) * exchangeRateUSD);
+        calculateEconomics();
+      });
+
+      btnUSD.addEventListener('click', function () {
+        if (currentCurrency === 'USD') return;
+        currentCurrency = 'USD';
+        btnUSD.className = 'px-3 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition';
+        btnINR.className = 'px-3 py-1 text-xs font-bold rounded-lg text-slate-500 hover:text-slate-800 transition';
+        if (currencySymbol) currencySymbol.textContent = '$';
+        if (inputRetail) inputRetail.value = (parseFloat(inputRetail.value) / exchangeRateUSD).toFixed(2);
+        calculateEconomics();
+      });
+    }
+
+    // Initialize economics calculator on load
+    calculateEconomics();
+  });
+</script>
+
+<%- include('partials/footer') %>

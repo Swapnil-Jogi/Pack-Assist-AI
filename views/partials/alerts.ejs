@@ -1,0 +1,72 @@
+<% if ((typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) || (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) || (typeof error !== 'undefined' && error && error.length > 0)) { %>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-1">
+  <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+    <div class="alert alert-dismissible fade show p-0 border-0 bg-white/95 rounded-2xl shadow-xl shadow-emerald-500/10 border-l-4 border-l-emerald-500 ring-1 ring-slate-900/5 mb-3 overflow-hidden transition-all duration-300" role="alert">
+      <div class="p-3.5 sm:p-4 flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/25">
+          <i class="fa-solid fa-circle-check text-lg"></i>
+        </div>
+        <div class="flex-grow min-w-0 pr-2">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Success</span>
+            <span class="text-[11px] text-slate-400 font-medium">Action Completed</span>
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-slate-800 mt-1 mb-0 leading-snug">
+            <%= success_msg %>
+          </p>
+        </div>
+        <button type="button" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors shrink-0 p-0 border-0 bg-transparent" data-bs-dismiss="alert" aria-label="Close">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <div class="h-1 bg-gradient-to-r from-emerald-500 to-teal-400 w-full"></div>
+    </div>
+  <% } %>
+
+  <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+    <div class="alert alert-dismissible fade show p-0 border-0 bg-white/95 rounded-2xl shadow-xl shadow-rose-500/10 border-l-4 border-l-rose-500 ring-1 ring-slate-900/5 mb-3 overflow-hidden transition-all duration-300" role="alert">
+      <div class="p-3.5 sm:p-4 flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 to-red-400 text-white flex items-center justify-center shrink-0 shadow-md shadow-rose-500/25">
+          <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+        </div>
+        <div class="flex-grow min-w-0 pr-2">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">Attention</span>
+            <span class="text-[11px] text-slate-400 font-medium">Notice</span>
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-slate-800 mt-1 mb-0 leading-snug">
+            <%= error_msg %>
+          </p>
+        </div>
+        <button type="button" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors shrink-0 p-0 border-0 bg-transparent" data-bs-dismiss="alert" aria-label="Close">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <div class="h-1 bg-gradient-to-r from-rose-500 to-red-400 w-full"></div>
+    </div>
+  <% } %>
+
+  <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+    <div class="alert alert-dismissible fade show p-0 border-0 bg-white/95 rounded-2xl shadow-xl shadow-amber-500/10 border-l-4 border-l-amber-500 ring-1 ring-slate-900/5 mb-3 overflow-hidden transition-all duration-300" role="alert">
+      <div class="p-3.5 sm:p-4 flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-400 text-white flex items-center justify-center shrink-0 shadow-md shadow-amber-500/25">
+          <i class="fa-solid fa-shield-halved text-lg"></i>
+        </div>
+        <div class="flex-grow min-w-0 pr-2">
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Authentication</span>
+            <span class="text-[11px] text-slate-400 font-medium">Access Alert</span>
+          </div>
+          <p class="text-xs sm:text-sm font-semibold text-slate-800 mt-1 mb-0 leading-snug">
+            <%= error %>
+          </p>
+        </div>
+        <button type="button" class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors shrink-0 p-0 border-0 bg-transparent" data-bs-dismiss="alert" aria-label="Close">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <div class="h-1 bg-gradient-to-r from-amber-500 to-orange-400 w-full"></div>
+    </div>
+  <% } %>
+</div>
+<% } %>

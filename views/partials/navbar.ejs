@@ -1,0 +1,97 @@
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      
+      <!-- Brand Logo -->
+      <a href="/" class="flex items-center space-x-3 group text-decoration-none">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-sky-500/20 group-hover:scale-105 transition duration-200">
+          <i class="bi bi-box-seam-fill text-lg"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xl font-bold tracking-tight text-slate-900 group-hover:text-sky-600 transition">
+            Pack-Assist<span class="text-sky-600"> AI</span>
+          </span>
+          <span class="text-[10px] tracking-wider uppercase font-semibold text-emerald-600 -mt-1">
+            Food Packaging Intelligence
+          </span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center space-x-1 lg:space-x-3">
+        <a href="/" class="px-3 py-2 rounded-lg text-sm font-medium transition text-decoration-none <%= (typeof currentPath !== 'undefined' && currentPath === '/') ? 'text-sky-600 bg-sky-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' %>">
+          Home
+        </a>
+
+        <% if (user) { %>
+          <a href="/dashboard" class="px-3 py-2 rounded-lg text-sm font-medium transition text-decoration-none <%= (typeof currentPath !== 'undefined' && currentPath === '/dashboard') ? 'text-sky-600 bg-sky-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' %>">
+            <i class="bi bi-grid-1x2-fill me-1 text-slate-400"></i> Dashboard
+          </a>
+          <a href="/recommend" class="px-3 py-2 rounded-lg text-sm font-medium transition text-decoration-none <%= (typeof currentPath !== 'undefined' && currentPath === '/recommend') ? 'text-sky-600 bg-sky-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' %>">
+            <i class="bi bi-sliders me-1 text-slate-400"></i> New Assessment
+          </a>
+        <% } %>
+      </nav>
+
+      <!-- User Auth Section -->
+      <div class="flex items-center space-x-3">
+        <% if (user) { %>
+          <a href="/recommend" class="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-sky-600 hover:bg-sky-500 shadow-sm transition text-decoration-none">
+            <i class="bi bi-plus-circle me-1.5"></i> Run Analysis
+          </a>
+
+          <!-- User dropdown with Font Awesome Logo -->
+          <div class="dropdown">
+            <button class="flex items-center space-x-2.5 p-1.5 px-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 transition shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <!-- Font Awesome User Logo Badge -->
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white shadow-sm ring-1 ring-sky-500/20">
+                <i class="fa-solid fa-user-tie text-sm"></i>
+              </div>
+              <div class="hidden lg:flex flex-col text-left">
+                <span class="text-xs font-semibold text-slate-800 leading-tight"><%= user.name %></span>
+                <span class="text-[10px] text-slate-500 leading-tight"><%= user.role || 'Scientist' %></span>
+              </div>
+              <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ms-0.5"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg border border-slate-200 rounded-xl p-2 text-sm mt-1 min-w-[220px]">
+              <li class="px-3 py-2.5 border-b border-slate-100 mb-1 flex items-center space-x-2.5 bg-slate-50/60 rounded-lg">
+                <div class="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center shrink-0">
+                  <i class="fa-solid fa-id-badge text-base"></i>
+                </div>
+                <div class="overflow-hidden">
+                  <div class="font-bold text-xs text-slate-800 truncate"><%= user.name %></div>
+                  <div class="text-[10px] text-slate-500 truncate"><%= user.email %></div>
+                </div>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-lg py-2 text-xs font-semibold text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition" href="/dashboard">
+                  <i class="fa-solid fa-chart-line me-2 text-sky-600"></i> Dashboard
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item rounded-lg py-2 text-xs font-semibold text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition" href="/recommend">
+                  <i class="fa-solid fa-microscope me-2 text-indigo-600"></i> New Assessment
+                </a>
+              </li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li>
+                <a class="dropdown-item rounded-lg py-2 text-xs font-semibold text-red-600 hover:bg-red-50 transition" href="/logout">
+                  <i class="fa-solid fa-arrow-right-from-bracket me-2 text-red-500"></i> Sign Out
+                </a>
+              </li>
+            </ul>
+          </div>
+        <% } else { %>
+          <a href="/login" class="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:text-slate-900 transition text-decoration-none">
+            Sign In
+          </a>
+          <a href="/register" class="inline-flex items-center px-4 py-2 rounded-xl text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 shadow-sm transition text-decoration-none">
+            Get Started
+            <i class="bi bi-arrow-right ms-1.5 text-xs"></i>
+          </a>
+        <% } %>
+      </div>
+
+    </div>
+  </div>
+</header>

@@ -1,0 +1,101 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+<%- include('partials/alerts') %>
+
+<div class="min-h-[calc(100vh-16rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-lg w-full space-y-6 bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
+    
+    <!-- Header -->
+    <div class="text-center">
+      <div class="w-12 h-12 mx-auto rounded-xl bg-gradient-to-tr from-sky-600 to-emerald-500 flex items-center justify-center text-white text-xl shadow-md mb-3">
+        <i class="bi bi-person-plus-fill"></i>
+      </div>
+      <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Create your Pack-Assist AI Account</h2>
+      <p class="text-xs text-slate-500 mt-1">Start running intelligent food packaging material recommendations</p>
+    </div>
+
+    <!-- Registration Form -->
+    <form class="space-y-4" action="/register" method="POST">
+      
+      <!-- Full Name -->
+      <div>
+        <label for="name" class="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+            <i class="bi bi-person"></i>
+          </span>
+          <input id="name" name="name" type="text" required
+            class="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            placeholder="Dr. Eleanor Vance">
+        </div>
+      </div>
+
+      <!-- Email Address -->
+      <div>
+        <label for="email" class="block text-xs font-semibold text-slate-700 mb-1">Professional Email *</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+            <i class="bi bi-envelope"></i>
+          </span>
+          <input id="email" name="email" type="email" required
+            class="block w-full pl-9 pr-3 py-2 border border-slate-300 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+            placeholder="e.vance@foodsci-tech.com">
+        </div>
+      </div>
+
+      <!-- Company & Role -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label for="company" class="block text-xs font-semibold text-slate-700 mb-1">Organization / Lab</label>
+          <input id="company" name="company" type="text"
+            class="block w-full px-3 py-2 border border-slate-300 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            placeholder="BioPackaging Global">
+        </div>
+        <div>
+          <label for="role" class="block text-xs font-semibold text-slate-700 mb-1">Specialization Role</label>
+          <select id="role" name="role"
+            class="block w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 bg-white">
+            <option value="Packaging Technologist">Packaging Technologist</option>
+            <option value="Food Scientist">Food Scientist</option>
+            <option value="QA Director">QA & Compliance Director</option>
+            <option value="Operations Manager">Operations Manager</option>
+            <option value="Researcher">Academic Researcher</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Password & Confirm Password -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label for="password" class="block text-xs font-semibold text-slate-700 mb-1">Password (Min 6 chars) *</label>
+          <input id="password" name="password" type="password" required minlength="6"
+            class="block w-full px-3 py-2 border border-slate-300 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            placeholder="••••••••">
+        </div>
+        <div>
+          <label for="confirmPassword" class="block text-xs font-semibold text-slate-700 mb-1">Confirm Password *</label>
+          <input id="confirmPassword" name="confirmPassword" type="password" required minlength="6"
+            class="block w-full px-3 py-2 border border-slate-300 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            placeholder="••••••••">
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit"
+        class="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-xl text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 shadow-md shadow-sky-600/20 transition">
+        <i class="bi bi-shield-check me-2"></i> Register & Access Platform
+      </button>
+    </form>
+
+    <!-- Footer Login Link -->
+    <div class="text-center pt-2">
+      <p class="text-xs text-slate-500">
+        Already registered?
+        <a href="/login" class="font-semibold text-sky-600 hover:text-sky-700 text-decoration-none ms-1">Sign in here</a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<%- include('partials/footer') %>

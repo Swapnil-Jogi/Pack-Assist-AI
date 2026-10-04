@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: pack-assist-ai
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: npm ci --omit=dev && pip install --no-cache-dir -r requirements.txt && python ml_service/recommend_model.py --train
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: USE_PYTHON_DIRECT
+        value: "true"
+      - key: CORS_ORIGIN
+        value: "*"

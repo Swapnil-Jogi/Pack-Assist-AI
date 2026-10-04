@@ -1,0 +1,310 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+<%- include('partials/alerts') %>
+
+<!-- HERO BANNER SECTION (MATCHING REFERENCE DESIGN) -->
+<section class="relative overflow-hidden bg-slate-950 text-white min-h-[660px] lg:min-h-[740px] flex items-center">
+  
+  <!-- BACKGROUND IMAGE WITH CINEMATIC LIGHTING & GRADIENTS -->
+  <div class="absolute inset-0 z-0">
+    <img src="/images/hero-bg.jpg" alt="Pack-Assist AI Intelligent Food Packaging Laboratory"
+      class="w-full h-full object-cover object-center lg:object-right filter brightness-95" />
+    
+    <!-- Deep Gradient from Left to Right (Flawless Typography Legibility on Left, Image Details on Right) -->
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 sm:via-slate-950/80 to-slate-950/20"></div>
+    <!-- Soft Top/Bottom Vignettes -->
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-transparent to-slate-950/80"></div>
+  </div>
+
+  <!-- FOREGROUND HERO CONTENT -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 relative z-10 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <!-- Left Column: Primary Copy & CTAs (like reference image) -->
+      <div class="lg:col-span-8 xl:col-span-7 space-y-6 text-left">
+        
+        <!-- Category Overline / Tag -->
+        <div class="inline-flex items-center space-x-2 text-xs font-bold tracking-widest text-sky-400 uppercase">
+          <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
+          <span>AI-POWERED FOOD PACKAGING INTELLIGENCE</span>
+        </div>
+
+        <!-- Hero Title -->
+        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1]">
+          AI Based Food Material <br class="hidden sm:inline" />
+          <span class="bg-gradient-to-r from-sky-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">Recommendation System</span>
+        </h1>
+
+        <!-- Subtitle Description (like reference image) -->
+        <p class="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed">
+          Profile your food commodity. Evaluate moisture, lipids, and respiration kinetics. Predict precision polymer barrier requirements (<strong class="text-white">OTR &amp; WVTR</strong>), <strong class="text-white">MAP gas ratios</strong>, and circular end-of-life disposal streams with AI evidence-backed technical datasheets.
+        </p>
+
+        <!-- Action Buttons (styled like reference image: 'Inspector Login ->' & 'District Officer Login') -->
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <% if (user) { %>
+            <a href="/recommend" class="inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sky-600 hover:bg-sky-500 shadow-lg shadow-sky-600/30 transition text-decoration-none">
+              <i class="fa-solid fa-microchip me-2"></i> Launch Assessment <i class="fa-solid fa-arrow-right ms-2 text-xs"></i>
+            </a>
+            <a href="/dashboard" class="inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-sm font-bold text-slate-200 bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 backdrop-blur-md shadow-sm transition text-decoration-none">
+              <i class="fa-solid fa-table-columns me-2 text-slate-400"></i> My Dashboard
+            </a>
+          <% } else { %>
+            <a href="/register" class="inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-sky-600 hover:bg-sky-500 shadow-lg shadow-sky-600/30 transition text-decoration-none">
+              Start Free Assessment <i class="fa-solid fa-arrow-right ms-2 text-xs"></i>
+            </a>
+            <a href="/login" class="inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-sm font-bold text-slate-200 bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 backdrop-blur-md shadow-sm transition text-decoration-none">
+              <i class="fa-solid fa-arrow-right-to-bracket me-2 text-slate-400"></i> Sign In to Account
+            </a>
+          <% } %>
+          </div>
+
+        <!-- Feature Badges Row Along Bottom (like reference image: 'Offline OCR', 'Rule-level verification', 'Evidence-backed reports') -->
+        <div class="pt-6 border-t border-slate-800/80 flex flex-wrap items-center gap-6 text-xs font-medium text-slate-400">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-shield-halved text-sky-400"></i>
+            <span>ASTM D3985 &amp; F1249 Aligned</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+            <span>FDA 21 CFR 177 Validated</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-file-pdf text-indigo-400"></i>
+            <span>Evidence-Backed PDF Datasheets</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-recycle text-teal-400"></i>
+            <span>Circular End-of-Life Scoring</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Area: Completely unobstructed, letting the background packaging & analytics tablet shine through -->
+
+    </div>
+  </div>
+
+</section>
+
+<!-- COMMODITY TAXONOMY SECTION -->
+<section class="py-16 bg-white border-y border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-sky-600 mb-2">Broad Industry Coverage</h2>
+      <h3 class="text-3xl font-extrabold text-slate-900">Tailored For Every Food Commodity Class</h3>
+      <p class="text-sm text-slate-500 mt-2">
+        Each commodity profile triggers distinct degradation prevention mechanisms, from anaerobic prevention in fresh produce to radical scavenging in lipid-rich snack foods.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      
+      <div class="p-4 rounded-xl border border-slate-200 hover:border-sky-500 hover:shadow-md transition text-center group">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+          <i class="bi bi-apple"></i>
+        </div>
+        <h4 class="text-xs font-bold text-slate-800 mb-1">Fresh Produce</h4>
+        <p class="text-[11px] text-slate-500">Micro-perforated breathable equilibrium</p>
+      </div>
+
+      <div class="p-4 rounded-xl border border-slate-200 hover:border-sky-500 hover:shadow-md transition text-center group">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+          <i class="bi bi-egg-fried"></i>
+        </div>
+        <h4 class="text-xs font-bold text-slate-800 mb-1">Bakery & Snacks</h4>
+        <p class="text-[11px] text-slate-500">Zero-moisture & light metallized shields</p>
+      </div>
+
+      <div class="p-4 rounded-xl border border-slate-200 hover:border-sky-500 hover:shadow-md transition text-center group">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+          <i class="bi bi-fire"></i>
+        </div>
+        <h4 class="text-xs font-bold text-slate-800 mb-1">Meat & Poultry</h4>
+        <p class="text-[11px] text-slate-500">EVOH multi-layer & oxymyoglobin MAP</p>
+      </div>
+
+      <div class="p-4 rounded-xl border border-slate-200 hover:border-sky-500 hover:shadow-md transition text-center group">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+          <i class="bi bi-cup-hot"></i>
+        </div>
+        <h4 class="text-xs font-bold text-slate-800 mb-1">Coffee & Spices</h4>
+        <p class="text-[11px] text-slate-500">Aluminum foil absolute barrier + valve</p>
+      </div>
+
+      <div class="p-4 rounded-xl border border-slate-200 hover:border-sky-500 hover:shadow-md transition text-center group">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+          <i class="bi bi-snow"></i>
+        </div>
+        <h4 class="text-xs font-bold text-slate-800 mb-1">Frozen Foods</h4>
+        <p class="text-[11px] text-slate-500">Sub-zero puncture & freezer-burn defense</p>
+      </div>
+
+      <div class="p-4 rounded-xl border border-slate-200 hover:border-sky-500 hover:shadow-md transition text-center group">
+        <div class="w-12 h-12 mx-auto rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition">
+          <i class="bi bi-cup-straw"></i>
+        </div>
+        <h4 class="text-xs font-bold text-slate-800 mb-1">Dairy & Cheese</h4>
+        <p class="text-[11px] text-slate-500">Antimicrobial CO₂ headspace + PA/PE</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SMART PACKAGING IN ACTION SHOWCASE SECTION -->
+<section class="py-20 bg-slate-900 text-white overflow-hidden relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      
+      <!-- Left Column: High-Res Packaging Visual with Glowing Frame -->
+      <div class="lg:col-span-6 relative">
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-700/80 group">
+          <img src="/images/hero-packaging.jpg" alt="Pack-Assist AI Smart Food Packaging Laboratory" class="w-full h-80 sm:h-96 object-cover transform group-hover:scale-105 transition duration-700 ease-out" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent"></div>
+          
+          <div class="absolute bottom-4 start-4 end-4 p-4 rounded-2xl bg-slate-900/80 backdrop-blur-md border border-slate-700 text-xs space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-flask-vial text-emerald-400"></i> Active Smart Packaging In Action
+              </span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                Eco-Certified
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed">
+              Real-time synchronization between modified atmosphere headspace (MAP), bio-degradable polymer barrier films, and circular waste streams.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Scientific Capabilities -->
+      <div class="lg:col-span-6 space-y-6">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 block mb-2">Sustainable Science &amp; Innovation</span>
+          <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+            Next-Generation Smart Packaging Engineered by AI
+          </h3>
+          <p class="text-slate-300 text-sm mt-3 leading-relaxed">
+            From farm-fresh produce to high-lipid snacks, Pack-Assist AI predicts the exact multi-layer barrier chemistry needed to extend shelf life, slash food waste, and eliminate single-use plastic pollution.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-1.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-leaf"></i>
+            </div>
+            <h4 class="text-xs font-bold text-white">Compostable Bio-Polymers</h4>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Recommends PLA, PHA, and mono-PE structures with certified zero persistent microplastics.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-1.5">
+            <div class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-wind"></i>
+            </div>
+            <h4 class="text-xs font-bold text-white">Active MAP Headspace</h4>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Calculates precise CO₂ / O₂ / N₂ atmospheric gas ratios to halt oxidative rancidity.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-1.5">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h4 class="text-xs font-bold text-white">ASTM Barrier Standards</h4>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Engineered compliance for ASTM D3985 (OTR) and ASTM F1249 (WVTR) permeation rates.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-1.5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-coins"></i>
+            </div>
+            <h4 class="text-xs font-bold text-white">Waste ROI Economics</h4>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              Cuts retail return rates from 14% to 2.5%, saving up to 5x of initial packaging run costs.
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <a href="/recommend" class="inline-flex items-center px-5 py-3 rounded-xl text-xs font-bold text-slate-900 bg-emerald-400 hover:bg-emerald-300 transition text-decoration-none shadow-lg shadow-emerald-400/20">
+            <i class="fa-solid fa-microchip me-2"></i> Run AI Packaging Simulation
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CORE FEATURES SECTION -->
+<section class="py-20 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-sky-600 mb-2">Engineered Precision</h2>
+      <h3 class="text-3xl font-extrabold text-slate-900">End-to-End Packaging Intelligence Workflow</h3>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Feature 1 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl mb-4">
+          <i class="bi bi-bezier2"></i>
+        </div>
+        <h4 class="text-base font-bold text-slate-900 mb-2">Machine Learning Classifier</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Powered by Scikit-Learn Random Forest pipelines trained on empirical food packaging datasets, balancing moisture isotherms, water activity, and respiration dynamics.
+        </p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4">
+          <i class="bi bi-shield-shaded"></i>
+        </div>
+        <h4 class="text-base font-bold text-slate-900 mb-2">Exact Barrier (OTR & WVTR)</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Calculates pinpoint oxygen transmission (cc/m²/24h) and water vapor transmission (g/m²/24h) based on target shelf life, storage temperature, and humidity.
+        </p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition">
+        <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl mb-4">
+          <i class="bi bi-file-earmark-pdf-fill"></i>
+        </div>
+        <h4 class="text-base font-bold text-slate-900 mb-2">Automated PDF Datasheets</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Instantly stream formal industrial packaging datasheets with polymer breakdown, degradation mechanics, ASTM standards, and regulatory compliance sign-offs.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CALL TO ACTION BANNER -->
+<section class="py-16 bg-gradient-to-r from-slate-900 to-sky-950 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Ready to Optimize Your Food Packaging?</h2>
+    <p class="text-slate-300 max-w-xl mx-auto text-sm leading-relaxed">
+      Join packaging technologists, food scientists, and operations directors reducing packaging waste while extending food shelf life.
+    </p>
+    <div>
+      <a href="/register" class="inline-flex items-center px-6 py-3 rounded-xl text-sm font-semibold text-slate-950 bg-white hover:bg-slate-100 shadow-lg shadow-black/20 transition text-decoration-none">
+        Launch Your Assessment Now <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

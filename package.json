@@ -1,0 +1,42 @@
+{
+  "name": "pack-assist-ai",
+  "version": "1.0.0",
+  "description": "Pack-Assist AI - AI-Based Intelligent Food Packaging Material Recommendation System",
+  "license": "MIT",
+  "author": "Pack-Assist AI Team",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "ml:train": "python ml_service/recommend_model.py --train",
+    "ml:serve": "python ml_service/recommend_model.py --serve",
+    "health": "node -e \"const http=require('http');http.get('http://localhost:'+(process.env.PORT||8080)+'/health',r=>{process.exit(r.statusCode===200?0:1)}).on('error',()=>process.exit(1));\""
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.20.0",
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.8.2",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.5",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "express-session": "^1.19.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "method-override": "^3.0.0",
+    "mongoose": "^9.10.4",
+    "morgan": "^1.12.1",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "pdfkit": "^0.20.2"
+  }
+}
