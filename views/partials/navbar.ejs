@@ -23,6 +23,12 @@
           Home
         </a>
 
+        <% if (!user) { %>
+          <a href="/about" class="px-3 py-2 rounded-lg text-sm font-medium transition text-decoration-none <%= (typeof currentPath !== 'undefined' && currentPath === '/about') ? 'text-sky-600 bg-sky-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' %>">
+            About Us
+          </a>
+        <% } %>
+
         <% if (user) { %>
           <a href="/dashboard" class="px-3 py-2 rounded-lg text-sm font-medium transition text-decoration-none <%= (typeof currentPath !== 'undefined' && currentPath === '/dashboard') ? 'text-sky-600 bg-sky-50 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100' %>">
             <i class="bi bi-grid-1x2-fill me-1 text-slate-400"></i> Dashboard
@@ -36,10 +42,6 @@
       <!-- User Auth Section -->
       <div class="flex items-center space-x-3">
         <% if (user) { %>
-          <a href="/recommend" class="hidden sm:inline-flex items-center px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-sky-600 hover:bg-sky-500 shadow-sm transition text-decoration-none">
-            <i class="bi bi-plus-circle me-1.5"></i> Run Analysis
-          </a>
-
           <!-- User dropdown with Font Awesome Logo -->
           <div class="dropdown">
             <button class="flex items-center space-x-2.5 p-1.5 px-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-800 transition shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">

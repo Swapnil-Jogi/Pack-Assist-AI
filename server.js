@@ -161,6 +161,14 @@ app.get('/', (req, res) => {
   });
 });
 
+// About Us Page Route
+app.get('/about', (req, res) => {
+  res.render('about', {
+    title: 'About Us | Pack-Assist AI Food Packaging Intelligence',
+    user: req.user,
+  });
+});
+
 // Mount Routes
 app.use('/', authRoutes);
 app.use('/', recommendationRoutes);
